@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type {
   CompanyProcessingStats,
@@ -58,6 +59,16 @@ export class PipelineService {
     let duplicatesSkipped = 0;
 
     for (const company of companies) {
+      // Check if job was cancelled
+      const currentJob = await prisma.pipelineJob.findUnique({
+        where: { id: jobId },
+      });
+
+      if (currentJob?.status === "CANCELLED") {
+        console.log("Pipeline job was cancelled, stopping processing");
+        return;
+      }
+
       try {
         console.log(`Processing company: ${company.name}`);
 
@@ -81,12 +92,14 @@ export class PipelineService {
 
         // Rate limiting: wait between companies
         await this.sleep(this.config.delayBetweenCompanies);
-      } catch (error: any) {
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
         console.error(`Failed to process company ${company.name}:`, error);
 
         errors.push({
           company: company.name,
-          error: error.message || String(error),
+          error: errorMessage,
           timestamp: new Date().toISOString(),
         });
 
@@ -95,7 +108,7 @@ export class PipelineService {
           data: {
             processedCompanies: { increment: 1 },
             failedCompanies: { increment: 1 },
-            errors: errors as any,
+            errors: errors as unknown as Prisma.InputJsonValue,
           },
         });
       }
@@ -109,7 +122,7 @@ export class PipelineService {
       data: {
         status: finalStatus,
         completedAt: new Date(),
-        errors: errors as any,
+        errors: errors as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -120,7 +133,13 @@ export class PipelineService {
    * Process a single company
    */
   private async processCompany(
-    company: any,
+    company: {
+      id: string;
+      name: string;
+      slug: string;
+      sources: unknown;
+      domainFilter: unknown;
+    },
     _jobId: string,
   ): Promise<CompanyProcessingStats> {
     const sources = company.sources as Source[];
@@ -131,6 +150,21 @@ export class PipelineService {
     let totalDuplicates = 0;
 
     for (const source of sources) {
+      // Check if job was cancelled before processing each source
+      const jobCheck = await prisma.pipelineJob.findUnique({
+        where: { id: _jobId },
+        select: { status: true },
+      });
+
+      if (jobCheck?.status === "CANCELLED") {
+        console.log("Pipeline job was cancelled during source processing");
+        return {
+          found: totalFound,
+          saved: totalSaved,
+          duplicates: totalDuplicates,
+        };
+      }
+
       try {
         console.log(`  - Processing source: ${source.label} (${source.url})`);
 

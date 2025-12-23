@@ -1,17 +1,16 @@
-import "dotenv/config";                                                                                                                                                         
+import "dotenv/config";
 import path from "node:path";
 import type { PrismaConfig } from "prisma/config";
 
-
 const config: PrismaConfig = {
-	schema: path.join("prisma", "schema.prisma"),
-	migrations: {
-		path: path.join("prisma", "migrations"),
-		seed: `tsx ${path.join("prisma", "seed.ts")}`,
-	},
-	datasource: {
-		url: process.env.DATABASE_URL || "",
-	},
+  schema: path.join("prisma", "schema.prisma"),
+  migrations: {
+    path: path.join("prisma", "migrations"),
+    seed: `tsx ${path.join("prisma", "seed.ts")}`,
+  },
+  datasource: {
+    url: process.env.DATABASE_URL || "",
+  },
 };
 
 export default config;

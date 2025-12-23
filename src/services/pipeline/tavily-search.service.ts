@@ -1,12 +1,21 @@
 import { subDays } from "date-fns";
-import { tavily } from "tavily";
+import { TavilyClient } from "tavily";
 import type { TavilyResult } from "@/types/pipeline.types";
 
+interface TavilyApiResult {
+  url: string;
+  title: string;
+  content: string;
+  raw_content?: string;
+  score: string;
+  published_date?: string;
+}
+
 export class TavilySearchService {
-  private client: any;
+  private client: TavilyClient;
 
   constructor(apiKey: string) {
-    this.client = (tavily as any)({ apiKey });
+    this.client = new TavilyClient({ apiKey });
   }
 
   /**
@@ -22,19 +31,17 @@ export class TavilySearchService {
     try {
       const domain = new URL(sourceUrl).hostname;
 
-      const results = await this.client.search(
-        `site:${domain} ${companyName} articles blog posts news`,
-        {
-          searchDepth: "advanced",
-          maxResults: 20,
-          includeAnswer: false,
-          includeImages: false,
-        },
-      );
+      const results = await this.client.search({
+        query: `site:${domain} ${companyName} articles blog posts news`,
+        search_depth: "advanced",
+        max_results: 20,
+        include_answer: false,
+        include_images: false,
+      });
 
       // Filter by date manually if publishedDate is available
       const filteredResults = (results.results || [])
-        .filter((result: any) => {
+        .filter((result: TavilyApiResult) => {
           if (result.published_date) {
             const publishedDate = new Date(result.published_date);
             return publishedDate >= cutoffDate;
@@ -42,11 +49,11 @@ export class TavilySearchService {
           // If no published date, include it (will be filtered by AI later)
           return true;
         })
-        .map((result: any) => ({
+        .map((result: TavilyApiResult) => ({
           url: result.url,
-          title: result.title || "",
-          content: result.content || "",
-          score: result.score || 0,
+          title: result.title,
+          content: result.content,
+          score: Number.parseFloat(result.score) || 0,
           published_date: result.published_date,
         }));
 

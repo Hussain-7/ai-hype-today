@@ -14,6 +14,8 @@
     "db:stop": "./stop-db.sh",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "db:clean": "tsx prisma/clean.ts",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio"
   },
@@ -32,10 +34,12 @@
     "ai": "^6.0.1",
     "date-fns": "^4.1.0",
     "inngest": "^3.48.1",
+    "lucide-react": "^0.562.0",
     "next": "16.1.1",
     "pg": "^8.16.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-icons": "^5.5.0",
     "tavily": "^1.0.2",
     "zod": "^4.2.1"
   },

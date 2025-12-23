@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const limit = Math.min(
       Number.parseInt(searchParams.get("limit") || "50", 10),
-      100,
+      1000,
     );
     const offset = Number.parseInt(searchParams.get("offset") || "0", 10);
 

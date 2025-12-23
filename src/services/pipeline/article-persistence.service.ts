@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { Article } from "@/schemas/article.schema";
-import { DomainFilterService } from "./domain-filter.service";
+import { extractDomain } from "./domain-filter.service";
 
 interface PersistenceStats {
   saved: number;
@@ -46,13 +46,18 @@ export class ArticlePersistenceService {
             tags: article.tags || [],
             sourceUrl,
             sourceLabel,
-            domain: DomainFilterService.extractDomain(article.url),
+            domain: extractDomain(article.url),
           },
         });
 
         stats.saved++;
-      } catch (error: any) {
-        if (error.code === "P2002") {
+      } catch (error) {
+        if (
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
+          error.code === "P2002"
+        ) {
           // Unique constraint violation (race condition)
           stats.duplicates++;
         } else {
@@ -92,7 +97,7 @@ export class ArticlePersistenceService {
             tags: article.tags || [],
             sourceUrl,
             sourceLabel,
-            domain: DomainFilterService.extractDomain(article.url),
+            domain: extractDomain(article.url),
           },
           create: {
             url: article.url,
@@ -104,7 +109,7 @@ export class ArticlePersistenceService {
             tags: article.tags || [],
             sourceUrl,
             sourceLabel,
-            domain: DomainFilterService.extractDomain(article.url),
+            domain: extractDomain(article.url),
           },
         });
 
@@ -116,7 +121,7 @@ export class ArticlePersistenceService {
         } else {
           stats.duplicates++;
         }
-      } catch (error: any) {
+      } catch (error) {
         stats.errors++;
         console.error(`Failed to upsert article ${article.url}:`, error);
       }
