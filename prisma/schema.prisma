@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Companies from sources.json
+model Company {
+  id                String   @id @default(cuid())
+  name              String
+  slug              String   @unique
+  category          String[]
+  dominanceBucket   String   @map("dominance_bucket")
+  domainKey         String   @map("domain_key")
+
+  // JSON fields for domain filters and sources
+  domainFilter      Json     @map("domain_filter")
+  sources           Json
+
+  // Relationships
+  articles          Article[]
+
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([dominanceBucket])
+  @@map("companies")
+}
+
+// Extracted articles
+model Article {
+  id                String   @id @default(cuid())
+  url               String   @unique
+  title             String
+  description       String?  @db.Text
+  publishedAt       DateTime @map("published_at")
+
+  // Company relationship
+  companyId         String   @map("company_id")
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  // Metadata
+  sourceUrl         String?  @map("source_url")
+  sourceLabel       String?  @map("source_label")
+  domain            String
+
+  // Additional metadata (optional fields)
+  author            String?
+  imageUrl          String?  @map("image_url")
+  tags              String[] @default([])
+
+  // Timestamps
+  extractedAt       DateTime @default(now()) @map("extracted_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([companyId])
+  @@index([publishedAt])
+  @@index([domain])
+  @@index([extractedAt])
+  @@index([companyId, publishedAt])
+  @@map("articles")
+}
+
+// Pipeline job tracking
+model PipelineJob {
+  id                String   @id @default(cuid())
+  status            JobStatus @default(PENDING)
+
+  // Progress tracking
+  totalCompanies    Int      @map("total_companies")
+  processedCompanies Int     @default(0) @map("processed_companies")
+  successfulCompanies Int    @default(0) @map("successful_companies")
+  failedCompanies   Int      @default(0) @map("failed_companies")
+
+  // Article stats
+  totalArticlesFound Int     @default(0) @map("total_articles_found")
+  totalArticlesSaved Int     @default(0) @map("total_articles_saved")
+  duplicatesSkipped  Int     @default(0) @map("duplicates_skipped")
+
+  // Error tracking
+  errors            Json?
+
+  // Metadata
+  triggeredBy       String?  @map("triggered_by")
+  startedAt         DateTime? @map("started_at")
+  completedAt       DateTime? @map("completed_at")
+
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("pipeline_jobs")
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
