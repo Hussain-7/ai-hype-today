@@ -26,15 +26,13 @@
     "dominance_bucket": "dominant",
     "domain_key": "anthropic.com",
     "domain_filter": {
-      "include": [
-        "www.anthropic.com"
-      ],
+      "include": ["www.anthropic.com"],
       "exclude": []
     },
     "sources": [
       { "label": "News", "url": "https://www.anthropic.com/news" },
       { "label": "Research", "url": "https://www.anthropic.com/research" },
-      { "label":"Engineering", "url": "https://www.anthropic.com/engineering"}
+      { "label": "Engineering", "url": "https://www.anthropic.com/engineering" }
     ]
   },
   {
@@ -75,10 +73,7 @@
     "dominance_bucket": "dominant",
     "domain_key": "microsoft.com",
     "domain_filter": {
-      "include": [
-        "azure.microsoft.com",
-        "learn.microsoft.com"
-      ],
+      "include": ["azure.microsoft.com", "learn.microsoft.com"],
       "exclude": []
     },
     "sources": [
@@ -142,10 +137,7 @@
     "dominance_bucket": "dominant",
     "domain_key": "nvidia.com",
     "domain_filter": {
-      "include": [
-        "developer.nvidia.com",
-        "blogs.nvidia.com"
-      ],
+      "include": ["developer.nvidia.com", "blogs.nvidia.com"],
       "exclude": []
     },
     "sources": [
@@ -208,9 +200,7 @@
       "include": ["huggingface.co"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://huggingface.co/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://huggingface.co/blog" }]
   },
   {
     "company": "DeepSeek",
@@ -219,14 +209,10 @@
     "dominance_bucket": "major",
     "domain_key": "deepseek.com",
     "domain_filter": {
-      "include": [
-        "deepseek.ai"
-      ],
+      "include": ["deepseek.ai"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://deepseek.ai/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://deepseek.ai/blog" }]
   },
   {
     "company": "xAI",
@@ -292,10 +278,7 @@
     "dominance_bucket": "tooling",
     "domain_key": "replit.com",
     "domain_filter": {
-      "include": [
-        "replit.com",
-        "blog.replit.com"
-      ],
+      "include": ["replit.com", "blog.replit.com"],
       "exclude": []
     },
     "sources": [
@@ -316,9 +299,7 @@
       "include": ["cursor.com"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://cursor.com/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://cursor.com/blog" }]
   },
   {
     "company": "Windsurf (Codeium)",
@@ -355,9 +336,7 @@
       "include": ["exa.ai", "docs.exa.ai"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://exa.ai/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://exa.ai/blog" }]
   },
   {
     "company": "ElevenLabs",
@@ -369,9 +348,7 @@
       "include": ["elevenlabs.io"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://elevenlabs.io/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://elevenlabs.io/blog" }]
   },
   {
     "company": "Midjourney",
@@ -446,9 +423,7 @@
       "include": ["weaviate.io"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://weaviate.io/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://weaviate.io/blog" }]
   },
   {
     "company": "LangChain",
@@ -479,9 +454,7 @@
       "include": ["llamaindex.ai", "www.llamaindex.ai"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://www.llamaindex.ai/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://www.llamaindex.ai/blog" }]
   },
   {
     "company": "Vercel",
@@ -529,11 +502,7 @@
     "dominance_bucket": "tooling",
     "domain_key": "bolt.new",
     "domain_filter": {
-      "include": [
-        "bolt.new",
-        "support.bolt.new",
-        "blog.stackblitz.com"
-      ],
+      "include": ["bolt.new", "support.bolt.new", "blog.stackblitz.com"],
       "exclude": []
     },
     "sources": [
@@ -555,9 +524,7 @@
       "include": ["tanstack.com"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://tanstack.com/blog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://tanstack.com/blog" }]
   },
   {
     "company": "n8n",
@@ -586,7 +553,8 @@
     },
     "sources": [
       {
-        "label": "Blog", "url": "https://lovable.dev/blog"
+        "label": "Blog",
+        "url": "https://lovable.dev/blog"
       }
     ]
   }

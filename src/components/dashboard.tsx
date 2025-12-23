@@ -34,35 +34,35 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
-      <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="mb-3 text-4xl font-bold text-white">
+        <div className="mb-8 sm:mb-12">
+          <h1 className="mb-2 text-2xl font-bold text-white sm:mb-3 sm:text-4xl">
             Pipeline Dashboard
           </h1>
-          <p className="text-lg text-gray-400">
+          <p className="text-sm text-gray-400 sm:text-lg">
             Manage and monitor your AI news aggregation pipeline
           </p>
         </div>
 
         {/* Pipeline Controls */}
-        <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold text-white">
+        <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm sm:p-6 lg:p-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex-1">
+              <h2 className="text-xl font-semibold text-white sm:text-2xl">
                 Pipeline Control
               </h2>
-              <p className="mt-2 text-gray-400">
+              <p className="mt-1 text-sm text-gray-400 sm:mt-2 sm:text-base">
                 Trigger the pipeline to fetch latest AI news from all sources
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
               {currentJobDisplay && (
                 <button
                   type="button"
                   onClick={() => cancelPipeline(currentJobDisplay.id)}
                   disabled={isCancelling}
-                  className="rounded-lg bg-red-500/10 border border-red-500/20 px-6 py-3 font-semibold text-red-400 transition-all hover:bg-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-lg border border-red-500/20 bg-red-500/10 px-6 py-3 font-semibold text-red-400 transition-all hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                 >
                   {isCancelling ? "Cancelling..." : "Stop Pipeline"}
                 </button>
@@ -71,7 +71,7 @@ export function Dashboard() {
                 type="button"
                 onClick={() => triggerPipeline()}
                 disabled={isPipelineTriggering || !!currentJobDisplay}
-                className="rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
                 {isPipelineTriggering
                   ? "Triggering..."
@@ -91,13 +91,13 @@ export function Dashboard() {
 
         {/* Current Job Status */}
         {currentJobDisplay && (
-          <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-white">
+          <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm sm:p-6 lg:p-8">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-lg font-semibold text-white sm:text-xl">
                 Current Pipeline Status
               </h2>
               <span
-                className={`inline-flex items-center rounded-lg border px-4 py-2 text-sm font-medium ${getStatusColor(currentJobDisplay.status)}`}
+                className={`inline-flex w-fit items-center rounded-lg border px-4 py-2 text-sm font-medium ${getStatusColor(currentJobDisplay.status)}`}
               >
                 {currentJobDisplay.status}
               </span>
@@ -127,29 +127,29 @@ export function Dashboard() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm text-gray-400">Processed</p>
-                <p className="mt-2 text-3xl font-bold text-white">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
+                <p className="text-xs text-gray-400 sm:text-sm">Processed</p>
+                <p className="mt-1 text-xl font-bold text-white sm:mt-2 sm:text-3xl">
                   {currentJobDisplay.processedCompanies}/
                   {currentJobDisplay.totalCompanies}
                 </p>
               </div>
-              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-6">
-                <p className="text-sm text-emerald-400">Successful</p>
-                <p className="mt-2 text-3xl font-bold text-emerald-300">
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 sm:p-6">
+                <p className="text-xs text-emerald-400 sm:text-sm">Successful</p>
+                <p className="mt-1 text-xl font-bold text-emerald-300 sm:mt-2 sm:text-3xl">
                   {currentJobDisplay.successfulCompanies}
                 </p>
               </div>
-              <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-6">
-                <p className="text-sm text-blue-400">Articles Found</p>
-                <p className="mt-2 text-3xl font-bold text-blue-300">
+              <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-4 sm:p-6">
+                <p className="text-xs text-blue-400 sm:text-sm">Articles Found</p>
+                <p className="mt-1 text-xl font-bold text-blue-300 sm:mt-2 sm:text-3xl">
                   {currentJobDisplay.totalArticlesFound}
                 </p>
               </div>
-              <div className="rounded-xl border border-purple-500/20 bg-purple-500/10 p-6">
-                <p className="text-sm text-purple-400">Articles Saved</p>
-                <p className="mt-2 text-3xl font-bold text-purple-300">
+              <div className="rounded-xl border border-purple-500/20 bg-purple-500/10 p-4 sm:p-6">
+                <p className="text-xs text-purple-400 sm:text-sm">Articles Saved</p>
+                <p className="mt-1 text-xl font-bold text-purple-300 sm:mt-2 sm:text-3xl">
                   {currentJobDisplay.totalArticlesSaved}
                 </p>
               </div>
@@ -158,53 +158,55 @@ export function Dashboard() {
         )}
 
         {/* Recent Jobs */}
-        <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-          <h2 className="mb-6 text-xl font-semibold text-white">
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm sm:p-6 lg:p-8">
+          <h2 className="mb-4 text-lg font-semibold text-white sm:mb-6 sm:text-xl">
             Recent Pipeline Jobs
           </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-white/10">
-                <tr className="text-left text-sm text-gray-400">
-                  <th className="pb-4 font-medium">Status</th>
-                  <th className="pb-4 font-medium">Progress</th>
-                  <th className="pb-4 font-medium">Articles</th>
-                  <th className="pb-4 font-medium">Started</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {recentJobs.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="py-12 text-center text-gray-400">
-                      No pipeline jobs yet. Trigger the pipeline to get started.
-                    </td>
+          <div className="-mx-4 overflow-x-auto sm:mx-0">
+            <div className="inline-block min-w-full align-middle">
+              <table className="min-w-full">
+                <thead className="border-b border-white/10">
+                  <tr className="text-left text-xs text-gray-400 sm:text-sm">
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Status</th>
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Progress</th>
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Articles</th>
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Started</th>
                   </tr>
-                ) : (
-                  recentJobs.map((job) => (
-                    <tr key={job.id} className="text-sm">
-                      <td className="py-4">
-                        <span
-                          className={`inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium ${getStatusColor(job.status)}`}
-                        >
-                          {job.status}
-                        </span>
-                      </td>
-                      <td className="py-4 text-white">
-                        {job.processedCompanies}/{job.totalCompanies}
-                      </td>
-                      <td className="py-4 text-white">
-                        {job.totalArticlesSaved}
-                      </td>
-                      <td className="py-4 text-gray-400">
-                        {job.startedAt
-                          ? format(new Date(job.startedAt), "MMM d, h:mm a")
-                          : "Not started"}
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {recentJobs.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="px-4 py-8 text-center text-sm text-gray-400 sm:py-12">
+                        No pipeline jobs yet. Trigger the pipeline to get started.
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    recentJobs.map((job) => (
+                      <tr key={job.id} className="text-xs sm:text-sm">
+                        <td className="whitespace-nowrap px-4 py-3 sm:px-0 sm:py-4">
+                          <span
+                            className={`inline-flex items-center rounded-lg border px-2 py-1 text-xs font-medium sm:px-3 ${getStatusColor(job.status)}`}
+                          >
+                            {job.status}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-white sm:px-0 sm:py-4">
+                          {job.processedCompanies}/{job.totalCompanies}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-white sm:px-0 sm:py-4">
+                          {job.totalArticlesSaved}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-gray-400 sm:px-0 sm:py-4">
+                          {job.startedAt
+                            ? format(new Date(job.startedAt), "MMM d, h:mm a")
+                            : "Not started"}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
