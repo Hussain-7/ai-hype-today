@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const ArticleSchema = z.object({
   url: z.string().url(),

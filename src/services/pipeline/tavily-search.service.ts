@@ -1,6 +1,6 @@
-import { tavily } from 'tavily';
-import { subDays } from 'date-fns';
-import type { TavilyResult } from '@/types/pipeline.types';
+import { subDays } from "date-fns";
+import { tavily } from "tavily";
+import type { TavilyResult } from "@/types/pipeline.types";
 
 export class TavilySearchService {
   private client: any;
@@ -15,7 +15,7 @@ export class TavilySearchService {
   async searchSourceContent(
     sourceUrl: string,
     companyName: string,
-    dateRangeDays = 30
+    dateRangeDays = 30,
   ): Promise<TavilyResult[]> {
     const cutoffDate = subDays(new Date(), dateRangeDays);
 
@@ -25,11 +25,11 @@ export class TavilySearchService {
       const results = await this.client.search(
         `site:${domain} ${companyName} articles blog posts news`,
         {
-          searchDepth: 'advanced',
+          searchDepth: "advanced",
           maxResults: 20,
           includeAnswer: false,
           includeImages: false,
-        }
+        },
       );
 
       // Filter by date manually if publishedDate is available
@@ -44,8 +44,8 @@ export class TavilySearchService {
         })
         .map((result: any) => ({
           url: result.url,
-          title: result.title || '',
-          content: result.content || '',
+          title: result.title || "",
+          content: result.content || "",
           score: result.score || 0,
           published_date: result.published_date,
         }));
@@ -63,7 +63,7 @@ export class TavilySearchService {
   async searchMultipleSources(
     sourceUrls: string[],
     companyName: string,
-    dateRangeDays = 30
+    dateRangeDays = 30,
   ): Promise<TavilyResult[]> {
     const allResults: TavilyResult[] = [];
 
@@ -72,7 +72,7 @@ export class TavilySearchService {
         const results = await this.searchSourceContent(
           sourceUrl,
           companyName,
-          dateRangeDays
+          dateRangeDays,
         );
         allResults.push(...results);
       } catch (error) {
@@ -83,7 +83,7 @@ export class TavilySearchService {
 
     // Deduplicate by URL
     const uniqueResults = Array.from(
-      new Map(allResults.map((item) => [item.url, item])).values()
+      new Map(allResults.map((item) => [item.url, item])).values(),
     );
 
     return uniqueResults;

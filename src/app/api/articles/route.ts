@@ -1,18 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
-    const limit = Math.min(Number.parseInt(searchParams.get('limit') || '50'), 100);
-    const offset = Number.parseInt(searchParams.get('offset') || '0');
+    const limit = Math.min(
+      Number.parseInt(searchParams.get("limit") || "50", 10),
+      100,
+    );
+    const offset = Number.parseInt(searchParams.get("offset") || "0", 10);
 
     const [articles, total] = await Promise.all([
       prisma.article.findMany({
         take: limit,
         skip: offset,
         orderBy: {
-          publishedAt: 'desc',
+          publishedAt: "desc",
         },
         include: {
           company: {
@@ -37,10 +40,10 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Failed to fetch articles:', error);
+    console.error("Failed to fetch articles:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch articles', details: String(error) },
-      { status: 500 }
+      { error: "Failed to fetch articles", details: String(error) },
+      { status: 500 },
     );
   }
 }

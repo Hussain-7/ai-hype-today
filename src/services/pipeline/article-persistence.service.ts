@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/prisma';
-import { DomainFilterService } from './domain-filter.service';
-import type { Article } from '@/schemas/article.schema';
+import { prisma } from "@/lib/prisma";
+import type { Article } from "@/schemas/article.schema";
+import { DomainFilterService } from "./domain-filter.service";
 
 interface PersistenceStats {
   saved: number;
@@ -16,7 +16,7 @@ export class ArticlePersistenceService {
     articles: Article[],
     companyId: string,
     sourceUrl: string,
-    sourceLabel: string
+    sourceLabel: string,
   ): Promise<PersistenceStats> {
     const stats: PersistenceStats = {
       saved: 0,
@@ -52,7 +52,7 @@ export class ArticlePersistenceService {
 
         stats.saved++;
       } catch (error: any) {
-        if (error.code === 'P2002') {
+        if (error.code === "P2002") {
           // Unique constraint violation (race condition)
           stats.duplicates++;
         } else {
@@ -72,7 +72,7 @@ export class ArticlePersistenceService {
     articles: Article[],
     companyId: string,
     sourceUrl: string,
-    sourceLabel: string
+    sourceLabel: string,
   ): Promise<PersistenceStats> {
     const stats: PersistenceStats = {
       saved: 0,
@@ -140,7 +140,7 @@ export class ArticlePersistenceService {
   async getRecentArticles(companyId: string, limit = 10) {
     return await prisma.article.findMany({
       where: { companyId },
-      orderBy: { publishedAt: 'desc' },
+      orderBy: { publishedAt: "desc" },
       take: limit,
     });
   }

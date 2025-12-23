@@ -1,9 +1,12 @@
-import { prisma } from '@/lib/prisma';
-import { TavilySearchService } from './tavily-search.service';
-import { ArticleExtractionAgent } from './article-extraction.agent';
-import { ArticlePersistenceService } from './article-persistence.service';
-import type { CompanyProcessingStats, PipelineError } from '@/types/pipeline.types';
-import type { DomainFilter, Source } from '@/types/sources.types';
+import { prisma } from "@/lib/prisma";
+import type {
+  CompanyProcessingStats,
+  PipelineError,
+} from "@/types/pipeline.types";
+import type { DomainFilter, Source } from "@/types/sources.types";
+import { ArticleExtractionAgent } from "./article-extraction.agent";
+import { ArticlePersistenceService } from "./article-persistence.service";
+import { TavilySearchService } from "./tavily-search.service";
 
 export class PipelineService {
   private tavilyService: TavilySearchService;
@@ -18,7 +21,7 @@ export class PipelineService {
   constructor() {
     const tavilyApiKey = process.env.TAVILY_API_KEY;
     if (!tavilyApiKey) {
-      throw new Error('TAVILY_API_KEY environment variable is required');
+      throw new Error("TAVILY_API_KEY environment variable is required");
     }
 
     this.tavilyService = new TavilySearchService(tavilyApiKey);
@@ -44,7 +47,7 @@ export class PipelineService {
     // Update job status to RUNNING
     await prisma.pipelineJob.update({
       where: { id: jobId },
-      data: { status: 'RUNNING', startedAt: new Date() },
+      data: { status: "RUNNING", startedAt: new Date() },
     });
 
     const companies = await prisma.company.findMany();
@@ -99,7 +102,8 @@ export class PipelineService {
     }
 
     // Mark job as completed
-    const finalStatus = errors.length === companies.length ? 'FAILED' : 'COMPLETED';
+    const finalStatus =
+      errors.length === companies.length ? "FAILED" : "COMPLETED";
     await prisma.pipelineJob.update({
       where: { id: jobId },
       data: {
@@ -117,7 +121,7 @@ export class PipelineService {
    */
   private async processCompany(
     company: any,
-    jobId: string
+    _jobId: string,
   ): Promise<CompanyProcessingStats> {
     const sources = company.sources as Source[];
     const domainFilter = company.domainFilter as DomainFilter;
@@ -134,7 +138,7 @@ export class PipelineService {
         const searchResults = await this.tavilyService.searchSourceContent(
           source.url,
           company.name,
-          this.config.dateRangeDays
+          this.config.dateRangeDays,
         );
 
         console.log(`    Found ${searchResults.length} search results`);
@@ -153,7 +157,7 @@ export class PipelineService {
           },
           source.url,
           source.label,
-          this.config.dateRangeDays
+          this.config.dateRangeDays,
         );
 
         console.log(`    Extracted ${articles.length} articles`);
@@ -168,10 +172,12 @@ export class PipelineService {
           articles,
           company.id,
           source.url,
-          source.label
+          source.label,
         );
 
-        console.log(`    Saved ${stats.saved}, Duplicates ${stats.duplicates}, Errors ${stats.errors}`);
+        console.log(
+          `    Saved ${stats.saved}, Duplicates ${stats.duplicates}, Errors ${stats.errors}`,
+        );
         totalSaved += stats.saved;
         totalDuplicates += stats.duplicates;
 
@@ -209,6 +215,6 @@ export class PipelineService {
       throw new Error(`Company ${companySlug} not found`);
     }
 
-    return await this.processCompany(company, 'test');
+    return await this.processCompany(company, "test");
   }
 }

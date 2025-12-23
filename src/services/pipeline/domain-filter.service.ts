@@ -1,4 +1,4 @@
-import type { DomainFilter } from '@/types/sources.types';
+import type { DomainFilter } from "@/types/sources.types";
 
 export class DomainFilterService {
   /**
@@ -42,7 +42,7 @@ export class DomainFilterService {
       return new URL(url).hostname.toLowerCase();
     } catch (error) {
       console.error(`Failed to extract domain from URL: ${url}`, error);
-      return '';
+      return "";
     }
   }
 

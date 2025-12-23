@@ -1,17 +1,17 @@
-import { generateObject } from 'ai';
-import { google } from '@ai-sdk/google';
-import { subDays } from 'date-fns';
-import { ArticleListSchema, type Article } from '@/schemas/article.schema';
-import { DomainFilterService } from './domain-filter.service';
-import type { TavilyResult } from '@/types/pipeline.types';
-import type { DomainFilter } from '@/types/sources.types';
+import { google } from "@ai-sdk/google";
+import { generateObject } from "ai";
+import { subDays } from "date-fns";
+import { type Article, ArticleListSchema } from "@/schemas/article.schema";
+import type { TavilyResult } from "@/types/pipeline.types";
+import type { DomainFilter } from "@/types/sources.types";
+import { DomainFilterService } from "./domain-filter.service";
 
 export class ArticleExtractionAgent {
   private model: ReturnType<typeof google>;
 
   constructor() {
     // Use Gemini 1.5 Flash for fast, cost-effective extraction
-    this.model = google('gemini-1.5-flash');
+    this.model = google("gemini-1.5-flash");
   }
 
   /**
@@ -26,13 +26,13 @@ export class ArticleExtractionAgent {
     },
     sourceUrl: string,
     sourceLabel: string,
-    dateRangeDays = 30
+    dateRangeDays = 30,
   ): Promise<Article[]> {
     const cutoffDate = subDays(new Date(), dateRangeDays);
 
     // Pre-filter by domain
     const filteredResults = searchResults.filter((result) =>
-      DomainFilterService.isUrlAllowed(result.url, company.domainFilter)
+      DomainFilterService.isUrlAllowed(result.url, company.domainFilter),
     );
 
     if (filteredResults.length === 0) {
@@ -44,7 +44,7 @@ You are an AI article extractor. Analyze the following search results and extrac
 
 Company: ${company.name}
 Source: ${sourceLabel} (${sourceUrl})
-Whitelisted Domains: ${company.domainFilter.include.join(', ')}
+Whitelisted Domains: ${company.domainFilter.include.join(", ")}
 Date Cutoff: Articles must be published after ${cutoffDate.toISOString()}
 
 Search Results:
@@ -77,7 +77,7 @@ Return ONLY articles that meet ALL criteria. If unsure about publish date, use a
 
       return object.articles;
     } catch (error) {
-      console.error('Article extraction failed:', error);
+      console.error("Article extraction failed:", error);
       throw new Error(`AI extraction failed: ${error}`);
     }
   }
@@ -95,7 +95,7 @@ Return ONLY articles that meet ALL criteria. If unsure about publish date, use a
     sourceUrl: string,
     sourceLabel: string,
     dateRangeDays = 30,
-    maxRetries = 2
+    maxRetries = 2,
   ): Promise<Article[]> {
     let lastError: Error | null = null;
 
@@ -106,7 +106,7 @@ Return ONLY articles that meet ALL criteria. If unsure about publish date, use a
           company,
           sourceUrl,
           sourceLabel,
-          dateRangeDays
+          dateRangeDays,
         );
       } catch (error) {
         lastError = error as Error;
@@ -115,12 +115,12 @@ Return ONLY articles that meet ALL criteria. If unsure about publish date, use a
         if (attempt < maxRetries) {
           // Wait before retrying (exponential backoff)
           await new Promise((resolve) =>
-            setTimeout(resolve, Math.pow(2, attempt) * 1000)
+            setTimeout(resolve, 2 ** attempt * 1000),
           );
         }
       }
     }
 
-    throw lastError || new Error('Article extraction failed after retries');
+    throw lastError || new Error("Article extraction failed after retries");
   }
 }

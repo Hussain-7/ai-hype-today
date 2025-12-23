@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ jobId: string }> }
+  _req: NextRequest,
+  { params }: { params: Promise<{ jobId: string }> },
 ) {
   try {
     const { jobId } = await params;
@@ -13,7 +13,7 @@ export async function GET(
     });
 
     if (!job) {
-      return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+      return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
 
     // Calculate progress percentage
@@ -24,7 +24,7 @@ export async function GET(
 
     // Calculate estimated time remaining (if running)
     let estimatedTimeRemaining: string | null = null;
-    if (job.status === 'RUNNING' && job.startedAt) {
+    if (job.status === "RUNNING" && job.startedAt) {
       const elapsed = Date.now() - job.startedAt.getTime();
       const avgTimePerCompany = elapsed / job.processedCompanies;
       const remainingCompanies = job.totalCompanies - job.processedCompanies;
@@ -55,10 +55,10 @@ export async function GET(
       errors: job.errors,
     });
   } catch (error) {
-    console.error('Failed to fetch job status:', error);
+    console.error("Failed to fetch job status:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch job status', details: String(error) },
-      { status: 500 }
+      { error: "Failed to fetch job status", details: String(error) },
+      { status: 500 },
     );
   }
 }

@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import sourcesData from '../src/constants/sources.json';
+import { PrismaClient } from "@prisma/client";
+import sourcesData from "../src/constants/sources.json";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Starting database seed...');
+  console.log("Starting database seed...");
 
   for (const company of sourcesData) {
     console.log(`Seeding company: ${company.company}`);
@@ -37,7 +37,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('Error during seeding:', e);
+    console.error("Error during seeding:", e);
     process.exit(1);
   })
   .finally(async () => {
