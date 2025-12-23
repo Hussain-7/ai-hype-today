@@ -423,9 +423,16 @@ export function ArticlesPage() {
       {mobileFiltersOpen && (
         <>
           {/* Backdrop */}
-          <div
+          <button
+            type="button"
             className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+            aria-label="Close filters"
             onClick={() => setMobileFiltersOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+                setMobileFiltersOpen(false);
+              }
+            }}
           />
 
           {/* Drawer */}
