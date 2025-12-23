@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
               name: true,
               slug: true,
               dominanceBucket: true,
+              category: true,
             },
           },
         },

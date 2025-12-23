@@ -19,6 +19,7 @@ type Article = {
     name: string;
     slug: string;
     dominanceBucket: string;
+    category: string[];
   };
 };
 
@@ -27,7 +28,7 @@ export type DateRangeType = "all" | "today" | "week" | "month" | "custom";
 export function useArticles() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
-  const [selectedBuckets, setSelectedBuckets] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [dateRangeType, setDateRangeType] = useState<DateRangeType>("all");
   const [customStartDate, setCustomStartDate] = useState<Date | null>(null);
   const [customEndDate, setCustomEndDate] = useState<Date | null>(null);
@@ -59,12 +60,14 @@ export function useArticles() {
     }));
   }, [allArticles]);
 
-  const dominanceBuckets = useMemo(() => {
-    const buckets = new Set<string>();
+  const categories = useMemo(() => {
+    const categorySet = new Set<string>();
     for (const article of allArticles) {
-      buckets.add(article.company.dominanceBucket);
+      for (const category of article.company.category) {
+        categorySet.add(category);
+      }
     }
-    return Array.from(buckets).sort();
+    return Array.from(categorySet).sort();
   }, [allArticles]);
 
   // Calculate date range based on selected type
@@ -136,10 +139,12 @@ export function useArticles() {
       );
     }
 
-    // Apply bucket filter
-    if (selectedBuckets.length > 0) {
+    // Apply category filter
+    if (selectedCategories.length > 0) {
       filtered = filtered.filter((article) =>
-        selectedBuckets.includes(article.company.dominanceBucket),
+        article.company.category.some((cat) =>
+          selectedCategories.includes(cat),
+        ),
       );
     }
 
@@ -148,19 +153,19 @@ export function useArticles() {
       (a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
     );
-  }, [allArticles, searchQuery, selectedCompanies, selectedBuckets, dateRange]);
+  }, [allArticles, searchQuery, selectedCompanies, selectedCategories, dateRange]);
 
   return {
     articles: filteredArticles,
     allArticles,
     companies,
-    dominanceBuckets,
+    categories,
     searchQuery,
     setSearchQuery,
     selectedCompanies,
     setSelectedCompanies,
-    selectedBuckets,
-    setSelectedBuckets,
+    selectedCategories,
+    setSelectedCategories,
     dateRangeType,
     setDateRangeType,
     customStartDate,

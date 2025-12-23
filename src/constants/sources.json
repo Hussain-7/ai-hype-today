@@ -464,13 +464,7 @@
     "domain_key": "vercel.com",
     "domain_filter": { "include": ["vercel.com", "nextjs.org"], "exclude": [] },
     "sources": [
-      { "label": "Blog", "url": "https://vercel.com/blog" },
-      { "label": "Changelog", "url": "https://vercel.com/changelog" },
-      { "label": "Docs", "url": "https://vercel.com/docs" },
-      {
-        "label": "Community announcements",
-        "url": "https://community.vercel.com/c/announcements/27"
-      }
+      { "label": "AI blog", "url": "https://vercel.com/blog" }
     ]
   },
   {
@@ -484,14 +478,9 @@
       "exclude": []
     },
     "sources": [
-      { "label": "Main blog", "url": "https://blog.cloudflare.com/" },
       {
-        "label": "Docs changelog (all)",
-        "url": "https://developers.cloudflare.com/changelog/"
-      },
-      {
-        "label": "Workers platform changelog",
-        "url": "https://developers.cloudflare.com/workers/platform/changelog/"
+        "label": "AI blog",
+        "url": "https://blog.cloudflare.com/tag/ai/"
       }
     ]
   },
@@ -506,10 +495,6 @@
       "exclude": []
     },
     "sources": [
-      {
-        "label": "Release notes",
-        "url": "https://support.bolt.new/release-notes"
-      },
       { "label": "StackBlitz blog", "url": "https://blog.stackblitz.com/" }
     ]
   },
@@ -537,8 +522,7 @@
       "exclude": []
     },
     "sources": [
-      { "label": "Blog", "url": "https://n8n.io/blog/" },
-      { "label": "Release notes", "url": "https://docs.n8n.io/release-notes/" }
+      { "label": "Blog", "url": "https://n8n.io/blog/" }
     ]
   },
   {

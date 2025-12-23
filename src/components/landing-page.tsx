@@ -31,15 +31,15 @@ export function LandingPage() {
   const features = [
     {
       icon: Bell,
-      title: "Real-time Updates",
+      title: "Real-time Articles",
       description:
-        "Never miss a launch, update, or announcement from the AI ecosystem. Our automated pipeline checks sources 24/7.",
+        "Never miss a launch, article, or announcement from the AI ecosystem. Our automated pipeline checks sources 24/7.",
     },
     {
       icon: Filter,
       title: "Smart Filtering",
       description:
-        "Filter by company, category, or search across all updates. Find exactly what matters to you in seconds.",
+        "Filter by company, category, or search across all articles. Find exactly what matters to you in seconds.",
     },
     {
       icon: Building2,
@@ -95,13 +95,13 @@ export function LandingPage() {
 
           {/* Hero Description */}
           <p className="mx-auto mb-12 max-w-3xl text-xl text-gray-400 sm:text-2xl">
-            Track daily updates, launches, and changes from every major AI
+            Track daily articles, launches, and changes from every major AI
             provider. One feed. Zero noise. Built for builders.
           </p>
 
           {/* CTA Button */}
           <Link
-            href="/updates"
+            href="/articles"
             className="inline-flex items-center gap-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 text-lg font-semibold text-white transition-all hover:from-blue-600 hover:to-purple-700 hover:shadow-lg hover:shadow-blue-500/25"
           >
             Start Reading
@@ -114,7 +114,7 @@ export function LandingPage() {
               <div className="text-4xl font-bold text-white">
                 {allArticles.length}
               </div>
-              <div className="mt-2 text-sm text-gray-400">Total Updates</div>
+              <div className="mt-2 text-sm text-gray-400">Total Articles</div>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
               <div className="text-4xl font-bold text-white">
@@ -214,7 +214,7 @@ export function LandingPage() {
             AI landscape. Free. No signup required.
           </p>
           <Link
-            href="/updates"
+            href="/articles"
             className="inline-flex items-center gap-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 text-lg font-semibold text-white transition-all hover:from-blue-600 hover:to-purple-700 hover:shadow-lg hover:shadow-blue-500/25"
           >
             Start Reading Now

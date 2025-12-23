@@ -33,14 +33,14 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             <Link
-              href="/updates"
+              href="/articles"
               className={`text-sm font-medium transition-colors ${
-                pathname === "/updates"
+                pathname === "/articles"
                   ? "text-white"
                   : "text-gray-400 hover:text-white"
               }`}
             >
-              Updates
+              Articles
             </Link>
             <Link
               href="/admin"
@@ -76,15 +76,15 @@ export function Navbar() {
         <div className="md:hidden border-t border-white/10 bg-[#0A0A0A]">
           <div className="space-y-1 px-4 py-3">
             <Link
-              href="/updates"
+              href="/articles"
               onClick={() => setMobileMenuOpen(false)}
               className={`block rounded-lg px-3 py-2 text-base font-medium transition-colors ${
-                pathname === "/updates"
+                pathname === "/articles"
                   ? "bg-white/10 text-white"
                   : "text-gray-400 hover:bg-white/5 hover:text-white"
               }`}
             >
-              Updates
+              Articles
             </Link>
             <Link
               href="/admin"
