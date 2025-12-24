@@ -26,5 +26,60 @@ export const processPipeline = inngest.createFunction(
   },
 );
 
+// Scheduled pipeline trigger at 12:00 AM and 12:00 PM daily
+export const dailyPipelineTrigger = inngest.createFunction(
+  {
+    id: "daily-pipeline-trigger",
+    name: "Daily Pipeline Trigger (12:00 AM & 12:00 PM)",
+  },
+  { cron: "0 0,12 * * *" }, // Every day at 12:00 AM and 12:00 PM
+  async ({ step }) => {
+    console.log("Daily scheduled pipeline trigger starting...");
+
+    // Create and trigger a pipeline job
+    await step.run("trigger-daily-pipeline", async () => {
+      const { prisma } = await import("@/lib/prisma");
+
+      // Check if a pipeline is already running
+      const runningJob = await prisma.pipelineJob.findFirst({
+        where: {
+          status: { in: ["PENDING", "RUNNING"] },
+        },
+      });
+
+      if (runningJob) {
+        console.log("Pipeline already running, skipping scheduled trigger");
+        return { skipped: true, reason: "Pipeline already running" };
+      }
+
+      // Get total companies count
+      const totalCompanies = await prisma.company.count();
+
+      // Create job record
+      const job = await prisma.pipelineJob.create({
+        data: {
+          status: "PENDING",
+          totalCompanies,
+          triggeredBy: "cron:daily",
+        },
+      });
+
+      // Trigger the pipeline
+      await inngest.send({
+        name: "pipeline/trigger",
+        data: {
+          jobId: job.id,
+          companySlugs: null, // Process all companies
+        },
+      });
+
+      console.log(`Daily pipeline triggered successfully. Job ID: ${job.id}`);
+      return { jobId: job.id, totalCompanies };
+    });
+
+    return { message: "Daily pipeline triggered successfully" };
+  },
+);
+
 // Export all functions
-export const inngestFunctions = [processPipeline];
+export const inngestFunctions = [processPipeline, dailyPipelineTrigger];
