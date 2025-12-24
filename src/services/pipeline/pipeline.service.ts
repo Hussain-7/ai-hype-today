@@ -37,9 +37,9 @@ export class PipelineService {
   }
 
   /**
-   * Run the complete pipeline for all companies
+   * Run the complete pipeline for all or selected companies
    */
-  async runPipeline(jobId: string): Promise<void> {
+  async runPipeline(jobId: string, companySlugs?: string[]): Promise<void> {
     const job = await prisma.pipelineJob.findUnique({ where: { id: jobId } });
     if (!job) {
       throw new Error(`Job ${jobId} not found`);
@@ -51,7 +51,19 @@ export class PipelineService {
       data: { status: "RUNNING", startedAt: new Date() },
     });
 
-    const companies = await prisma.company.findMany();
+    // Fetch companies (all or filtered by slugs)
+    const companies = await prisma.company.findMany({
+      where: companySlugs
+        ? {
+            slug: { in: companySlugs },
+          }
+        : undefined,
+    });
+
+    console.log(
+      `Processing ${companies.length} compan${companies.length === 1 ? "y" : "ies"}${companySlugs ? " (selected)" : " (all)"}`,
+    );
+
     const errors: PipelineError[] = [];
 
     let totalArticlesFound = 0;

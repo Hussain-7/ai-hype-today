@@ -9,14 +9,16 @@ export const processPipeline = inngest.createFunction(
   },
   { event: "pipeline/trigger" },
   async ({ event, step }) => {
-    const { jobId } = event.data;
+    const { jobId, companySlugs } = event.data;
 
-    console.log(`Starting pipeline processing for job ${jobId}`);
+    console.log(
+      `Starting pipeline processing for job ${jobId}${companySlugs ? ` (${companySlugs.length} selected companies)` : " (all companies)"}`,
+    );
 
     // Run the pipeline in a step for better observability
     await step.run("run-pipeline", async () => {
       const pipelineService = new PipelineService();
-      await pipelineService.runPipeline(jobId);
+      await pipelineService.runPipeline(jobId, companySlugs || undefined);
       return { jobId, status: "completed" };
     });
 

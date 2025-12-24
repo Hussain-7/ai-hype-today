@@ -1,18 +1,28 @@
 "use client";
 
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   type JobStatus,
   usePipelineDashboard,
 } from "@/hooks/usePipelineDashboard";
 import { ArticlesManagement } from "./admin/articles-management";
 import { CompaniesManagement } from "./admin/companies-management";
+import { CompanySelectorModal } from "./admin/company-selector-modal";
 
 type Tab = "pipeline" | "articles" | "companies";
 
+interface Company {
+  id: string;
+  name: string;
+  slug: string;
+  category: string[];
+}
+
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("pipeline");
+  const [showCompanySelector, setShowCompanySelector] = useState(false);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
   const {
     recentJobs,
@@ -44,6 +54,19 @@ export function Dashboard() {
     { id: "articles", label: "Articles" },
     { id: "companies", label: "Companies" },
   ];
+
+  // Fetch companies for selection
+  useEffect(() => {
+    fetch("/api/companies?limit=100")
+      .then((res) => res.json())
+      .then((data) => setCompanies(data.companies || []))
+      .catch((err) => console.error("Failed to fetch companies:", err));
+  }, []);
+
+  const handleTriggerSelected = (selectedSlugs: string[]) => {
+    setShowCompanySelector(false);
+    triggerPipeline(selectedSlugs);
+  };
 
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
@@ -116,7 +139,15 @@ export function Dashboard() {
               )}
               <button
                 type="button"
-                onClick={() => triggerPipeline()}
+                onClick={() => setShowCompanySelector(true)}
+                disabled={isPipelineTriggering || !!currentJobDisplay}
+                className="w-full rounded-lg border border-blue-500/20 bg-blue-500/10 px-6 py-3 font-semibold text-blue-400 transition-all hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+              >
+                Trigger Selected
+              </button>
+              <button
+                type="button"
+                onClick={() => triggerPipeline(undefined)}
                 disabled={isPipelineTriggering || !!currentJobDisplay}
                 className="w-full rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
@@ -124,7 +155,7 @@ export function Dashboard() {
                   ? "Triggering..."
                   : currentJobDisplay
                     ? "Pipeline Running..."
-                    : "Trigger Pipeline"}
+                    : "Trigger All"}
               </button>
             </div>
           </div>
@@ -274,6 +305,14 @@ export function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Company Selector Modal */}
+        <CompanySelectorModal
+          companies={companies}
+          isOpen={showCompanySelector}
+          onConfirm={handleTriggerSelected}
+          onCancel={() => setShowCompanySelector(false)}
+        />
       </div>
     );
   }

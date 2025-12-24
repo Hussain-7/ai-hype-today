@@ -5,12 +5,13 @@ import { prisma } from "@/lib/prisma";
 
 const TriggerSchema = z.object({
   triggeredBy: z.string().optional(),
+  companySlugs: z.array(z.string()).optional(),
 });
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { triggeredBy } = TriggerSchema.parse(body);
+    const { triggeredBy, companySlugs } = TriggerSchema.parse(body);
 
     // Check if a pipeline is already running
     const runningJob = await prisma.pipelineJob.findFirst({
@@ -29,8 +30,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get total companies count
-    const totalCompanies = await prisma.company.count();
+    // Get total companies count (filtered if specific companies selected)
+    const totalCompanies = companySlugs
+      ? await prisma.company.count({
+          where: { slug: { in: companySlugs } },
+        })
+      : await prisma.company.count();
+
+    if (totalCompanies === 0) {
+      return NextResponse.json(
+        { error: "No companies found matching the selection" },
+        { status: 400 },
+      );
+    }
 
     // Create job record
     const job = await prisma.pipelineJob.create({
@@ -46,6 +58,7 @@ export async function POST(req: NextRequest) {
       name: "pipeline/trigger",
       data: {
         jobId: job.id,
+        companySlugs: companySlugs || null,
       },
     });
 

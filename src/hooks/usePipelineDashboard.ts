@@ -119,11 +119,14 @@ export function usePipelineDashboard() {
 
   // Trigger pipeline mutation
   const triggerPipelineMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (companySlugs?: string[]) => {
       const res = await fetch("/api/pipeline/trigger", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ triggeredBy: "dashboard" }),
+        body: JSON.stringify({
+          triggeredBy: "dashboard",
+          companySlugs: companySlugs || undefined,
+        }),
       });
 
       const data = await res.json();
