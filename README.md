@@ -37,10 +37,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 ## Next Up
-- [ ] When the pipeline is triggered  it fetch all the latest artciles from the sources. The first time for a source all articles should be fetched the next time it runs it should fetch articles for the previous day and current day only (some prompt edits to tell this specifically)
-- [ ] Add inggest keys to be able to deploy.
-- [ ] Add remote postgress db so that we can use it on prod.
-- [ ] From admin panle we should be able to trigger pipeline for a soruce to fetch all from source or fetch for specific ranges and add.
+- [x] When the pipeline is triggered  it fetch all the latest artciles from the sources. The first time for a source all articles should be fetched the next time it runs it should fetch articles for the previous day and current day only (some prompt edits to tell this specifically)
+- [x] Add inggest keys to be able to deploy.
+- [x] Add remote postgress db so that we can use it on prod.
+- [x] From admin panle we should be able to trigger pipeline for a soruce to fetch all from source or fetch for specific ranges and add.
 - [ ] Add login sign up via clerk. So that admin routes are protected.
 - [ ] Give users abilty to add new sources so they can track new companies and articles.
 - [ ] Persist the user's selected companies and sources so they are persisted in the database.

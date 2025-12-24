@@ -1,12 +1,11 @@
 "use client";
 
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Menu, Settings, X, Zap } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export function Navbar() {
-  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -30,29 +29,33 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              href="/articles"
-              className={`text-sm font-medium transition-colors ${
-                pathname === "/articles"
-                  ? "text-white"
-                  : "text-gray-400 hover:text-white"
-              }`}
-            >
-              Articles
-            </Link>
-            <Link
-              href="/admin"
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                pathname === "/admin"
-                  ? "bg-blue-500 text-white"
-                  : "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <Settings className="h-4 w-4" />
-              Admin
-            </Link>
+          {/* Right - Auth Controls (Desktop) */}
+          <div className="hidden md:flex items-center gap-4">
+            <SignedOut>
+              <Link
+                href="/sign-in"
+                className="rounded-lg bg-blue-500 px-6 py-2 text-sm font-semibold text-white transition-all hover:bg-blue-600"
+              >
+                Sign In
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "h-9 w-9",
+                  },
+                }}
+              >
+                <UserButton.MenuItems>
+                  <UserButton.Link
+                    label="Admin Dashboard"
+                    labelIcon={<Settings className="h-4 w-4" />}
+                    href="/admin"
+                  />
+                </UserButton.MenuItems>
+              </UserButton>
+            </SignedIn>
           </div>
 
           {/* Mobile Menu Button */}
@@ -75,29 +78,35 @@ export function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-white/10 bg-[#0A0A0A]">
           <div className="space-y-1 px-4 py-3">
-            <Link
-              href="/articles"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`block rounded-lg px-3 py-2 text-base font-medium transition-colors ${
-                pathname === "/articles"
-                  ? "bg-white/10 text-white"
-                  : "text-gray-400 hover:bg-white/5 hover:text-white"
-              }`}
-            >
-              Articles
-            </Link>
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-base font-medium transition-colors ${
-                pathname === "/admin"
-                  ? "bg-blue-500 text-white"
-                  : "text-gray-400 hover:bg-white/5 hover:text-white"
-              }`}
-            >
-              <Settings className="h-4 w-4" />
-              Admin
-            </Link>
+            <SignedOut>
+              <Link
+                href="/sign-in"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block rounded-lg bg-blue-500 px-6 py-3 text-center text-base font-semibold text-white transition-all hover:bg-blue-600"
+              >
+                Sign In
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "h-9 w-9",
+                    },
+                  }}
+                >
+                  <UserButton.MenuItems>
+                    <UserButton.Link
+                      label="Admin Dashboard"
+                      labelIcon={<Settings className="h-4 w-4" />}
+                      href="/admin"
+                    />
+                  </UserButton.MenuItems>
+                </UserButton>
+                <span className="text-sm text-gray-400">Account</span>
+              </div>
+            </SignedIn>
           </div>
         </div>
       )}

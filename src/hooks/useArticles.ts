@@ -25,7 +25,7 @@ type Article = {
 
 export type DateRangeType = "all" | "today" | "week" | "month" | "custom";
 
-export function useArticles() {
+export function useArticles(initialArticles?: Article[]) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -33,7 +33,7 @@ export function useArticles() {
   const [customStartDate, setCustomStartDate] = useState<Date | null>(null);
   const [customEndDate, setCustomEndDate] = useState<Date | null>(null);
 
-  // Fetch all articles
+  // Use server-provided articles if available, otherwise fetch client-side
   const { data: articlesData, refetch: refetchArticles } = useQuery({
     queryKey: ["articles"],
     queryFn: async () => {
@@ -44,6 +44,8 @@ export function useArticles() {
       const data = await res.json();
       return { articles: (data.articles || []) as Article[] };
     },
+    initialData: initialArticles ? { articles: initialArticles } : undefined,
+    enabled: !initialArticles, // Don't fetch if we have initial data
   });
 
   const allArticles = articlesData?.articles || [];

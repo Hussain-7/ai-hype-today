@@ -1,5 +1,3 @@
-"use client";
-
 import { formatDistanceToNow } from "date-fns";
 import {
   ArrowRight,
@@ -10,50 +8,46 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
-import { useArticles } from "@/hooks/useArticles";
+import type { Article } from "@/lib/get-articles";
 
-export function LandingPage() {
-  const { allArticles } = useArticles();
+interface LandingPageProps {
+  allArticles: Article[];
+}
 
+export function LandingPage({ allArticles }: LandingPageProps) {
   // Calculate last update time
-  const lastUpdate = useMemo(() => {
-    if (allArticles.length === 0) return "Never";
-
-    return formatDistanceToNow(
-      new Date(
-        Math.max(...allArticles.map((a) => new Date(a.publishedAt).getTime())),
-      ),
-      { addSuffix: true },
-    );
-  }, [allArticles]);
+  const lastUpdate =
+    allArticles.length === 0
+      ? "Never"
+      : formatDistanceToNow(
+          new Date(
+            Math.max(
+              ...allArticles.map((a) => new Date(a.publishedAt).getTime()),
+            ),
+          ),
+          { addSuffix: true },
+        );
 
   // Calculate today's articles count
-  const todaysArticlesCount = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    return allArticles.filter((article) => {
-      const articleDate = new Date(article.publishedAt);
-      articleDate.setHours(0, 0, 0, 0);
-      return articleDate.getTime() === today.getTime();
-    }).length;
-  }, [allArticles]);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todaysArticlesCount = allArticles.filter((article) => {
+    const articleDate = new Date(article.publishedAt);
+    articleDate.setHours(0, 0, 0, 0);
+    return articleDate.getTime() === today.getTime();
+  }).length;
 
   // Calculate this month's articles count
-  const thisMonthArticlesCount = useMemo(() => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    return allArticles.filter((article) => {
-      const articleDate = new Date(article.publishedAt);
-      return (
-        articleDate.getMonth() === currentMonth &&
-        articleDate.getFullYear() === currentYear
-      );
-    }).length;
-  }, [allArticles]);
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  const thisMonthArticlesCount = allArticles.filter((article) => {
+    const articleDate = new Date(article.publishedAt);
+    return (
+      articleDate.getMonth() === currentMonth &&
+      articleDate.getFullYear() === currentYear
+    );
+  }).length;
 
   const features = [
     {

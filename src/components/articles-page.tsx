@@ -11,8 +11,15 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { type DateRangeType, useArticles } from "@/hooks/useArticles";
+import type { Article } from "@/lib/get-articles";
 
-export function ArticlesPage() {
+interface ArticlesPageProps {
+  allArticles: Article[];
+}
+
+export function ArticlesPage({
+  allArticles: initialArticles,
+}: ArticlesPageProps) {
   const {
     articles,
     allArticles,
@@ -30,7 +37,7 @@ export function ArticlesPage() {
     setCustomStartDate,
     customEndDate,
     setCustomEndDate,
-  } = useArticles();
+  } = useArticles(initialArticles);
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [dateDropdownOpen, setDateDropdownOpen] = useState(false);
