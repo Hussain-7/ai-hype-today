@@ -4,7 +4,7 @@ import { subDays } from "date-fns";
 import { type Article, ArticleListSchema } from "@/schemas/article.schema";
 import type { TavilyResult } from "@/types/pipeline.types";
 import type { DomainFilter } from "@/types/sources.types";
-import { isUrlAllowed } from "./domain-filter.service";
+import { isUrlAllowed, isUrlUnderSource } from "./domain-filter.service";
 
 export class ArticleExtractionAgent {
   private model: ReturnType<typeof google>;
@@ -33,6 +33,7 @@ export class ArticleExtractionAgent {
       publishedAt: Date;
     }> = [],
     isFirstFetch = true,
+    sourceUrls: string[] = [],
   ): Promise<Article[]> {
     const cutoffDate = subDays(new Date(), dateRangeDays);
 
@@ -74,6 +75,17 @@ You are an AI article extractor for an AI news aggregation platform. Your job is
 Company: ${company.name}
 Source: ${sourceLabel} (${sourceUrl})
 Whitelisted Domains: ${company.domainFilter.include.join(", ")}
+
+ALLOWED SOURCE URL PATHS (CRITICAL - Articles MUST be from these exact paths):
+${sourceUrls.length > 0 ? sourceUrls.map((url) => `  - ${url}* (and any nested paths)`).join("\n") : `  - ${sourceUrl}* (and any nested paths)`}
+
+⚠️ IMPORTANT: Only extract articles whose URLs start with one of the paths above.
+Example: If source is "https://openai.com/news/", ONLY extract articles like:
+  ✅ https://openai.com/news/gpt4-launch
+  ✅ https://openai.com/news/product-releases/some-feature
+  ❌ https://openai.com/research/paper (WRONG PATH - reject!)
+  ❌ https://openai.com/careers/job (WRONG PATH - reject!)
+
 Date Cutoff: Articles must be published after ${cutoffDate.toISOString()}
 ${isFirstFetch ? "Fetch Type: FIRST FETCH - Get all recent articles" : "Fetch Type: SUBSEQUENT FETCH - Only get articles from yesterday and today"}
 
@@ -187,7 +199,28 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
         `Extracted ${validArticles.length} valid articles out of ${output.articles.length} total`,
       );
 
-      return validArticles;
+      // CRITICAL: Deterministic filter to ensure articles are under source URL paths
+      const sourceUrlsToCheck =
+        sourceUrls.length > 0 ? sourceUrls : [sourceUrl];
+      const strictlyFilteredArticles = validArticles.filter((article) => {
+        const isUnderSource = isUrlUnderSource(article.url, sourceUrlsToCheck);
+        if (!isUnderSource) {
+          console.log(
+            `[STRICT FILTER] Rejected article not under source URL paths: ${article.url}`,
+          );
+          console.log(
+            `  Allowed source paths: ${sourceUrlsToCheck.join(", ")}`,
+          );
+          return false;
+        }
+        return true;
+      });
+
+      console.log(
+        `Strict source URL filtering: ${validArticles.length} → ${strictlyFilteredArticles.length} articles`,
+      );
+
+      return strictlyFilteredArticles;
     } catch (error) {
       console.error("Article extraction failed:", error);
       throw new Error(`AI extraction failed: ${error}`);
@@ -213,6 +246,7 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
       publishedAt: Date;
     }> = [],
     isFirstFetch = true,
+    sourceUrls: string[] = [],
     maxRetries = 2,
   ): Promise<Article[]> {
     let lastError: Error | null = null;
@@ -227,6 +261,7 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
           dateRangeDays,
           existingArticles,
           isFirstFetch,
+          sourceUrls,
         );
       } catch (error) {
         lastError = error as Error;

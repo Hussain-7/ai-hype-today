@@ -16,13 +16,7 @@
         "url": "https://openai.com/news/product-releases/"
       },
       { "label": "Engineering", "url": "https://openai.com/news/engineering/" },
-      { "label": "Research", "url": "https://openai.com/research/" },
-      {
-        "label": "API changelog",
-        "url": "https://platform.openai.com/docs/changelog"
-      },
-      { "label": "Docs", "url": "https://platform.openai.com/docs" },
-      { "label": "GitHub org", "url": "https://github.com/openai" }
+      { "label": "Research", "url": "https://openai.com/research/" }
     ]
   },
   {
@@ -32,23 +26,13 @@
     "dominance_bucket": "dominant",
     "domain_key": "anthropic.com",
     "domain_filter": {
-      "include": [
-        "anthropic.com",
-        "docs.anthropic.com",
-        "platform.claude.com",
-        "code.claude.com",
-        "github.com/anthropics/claude-code"
-      ],
+      "include": ["www.anthropic.com"],
       "exclude": []
     },
     "sources": [
       { "label": "News", "url": "https://www.anthropic.com/news" },
       { "label": "Research", "url": "https://www.anthropic.com/research" },
-      { "label": "Claude Code docs", "url": "https://code.claude.com/" },
-      {
-        "label": "Claude Code GitHub",
-        "url": "https://github.com/anthropics/claude-code"
-      }
+      { "label": "Engineering", "url": "https://www.anthropic.com/engineering" }
     ]
   },
   {
@@ -75,10 +59,6 @@
       {
         "label": "Google AI updates",
         "url": "https://blog.google/technology/ai/"
-      },
-      {
-        "label": "Vertex AI release notes",
-        "url": "https://cloud.google.com/vertex-ai/docs/core-release-notes"
       }
     ]
   },
@@ -89,26 +69,13 @@
     "dominance_bucket": "dominant",
     "domain_key": "microsoft.com",
     "domain_filter": {
-      "include": [
-        "azure.microsoft.com",
-        "learn.microsoft.com",
-        "techcommunity.microsoft.com",
-        "github.com/microsoft"
-      ],
+      "include": ["azure.microsoft.com", "learn.microsoft.com"],
       "exclude": []
     },
     "sources": [
       {
         "label": "Azure updates",
         "url": "https://azure.microsoft.com/en-us/updates/"
-      },
-      {
-        "label": "Azure OpenAI 'What's new'",
-        "url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/whats-new"
-      },
-      {
-        "label": "Azure AI Foundry docs",
-        "url": "https://learn.microsoft.com/en-us/azure/ai-studio/"
       }
     ]
   },
@@ -130,10 +97,6 @@
       {
         "label": "AWS Machine Learning Blog",
         "url": "https://aws.amazon.com/blogs/machine-learning/"
-      },
-      {
-        "label": "Bedrock document history (release notes)",
-        "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/doc-history.html"
       }
     ]
   },
@@ -144,12 +107,11 @@
     "dominance_bucket": "dominant",
     "domain_key": "ai.meta.com",
     "domain_filter": {
-      "include": ["ai.meta.com", "github.com/meta-llama"],
+      "include": ["ai.meta.com"],
       "exclude": []
     },
     "sources": [
-      { "label": "AI at Meta blog", "url": "https://ai.meta.com/blog/" },
-      { "label": "Llama GitHub org", "url": "https://github.com/meta-llama" }
+      { "label": "AI at Meta blog", "url": "https://ai.meta.com/blog/" }
     ]
   },
   {
@@ -159,11 +121,7 @@
     "dominance_bucket": "dominant",
     "domain_key": "nvidia.com",
     "domain_filter": {
-      "include": [
-        "developer.nvidia.com",
-        "blogs.nvidia.com",
-        "github.com/NVIDIA"
-      ],
+      "include": ["developer.nvidia.com", "blogs.nvidia.com"],
       "exclude": []
     },
     "sources": [
@@ -171,8 +129,7 @@
         "label": "NVIDIA Developer Blog",
         "url": "https://developer.nvidia.com/blog/"
       },
-      { "label": "NVIDIA blog", "url": "https://blogs.nvidia.com/" },
-      { "label": "GitHub org", "url": "https://github.com/NVIDIA" }
+      { "label": "NVIDIA blog", "url": "https://blogs.nvidia.com/" }
     ]
   },
   {
@@ -209,51 +166,12 @@
     "dominance_bucket": "major",
     "domain_key": "sambanova.ai",
     "domain_filter": {
-      "include": ["sambanova.ai", "community.sambanova.ai"],
+      "include": ["sambanova.ai"],
       "exclude": []
     },
     "sources": [
       { "label": "Blog", "url": "https://sambanova.ai/blog/" },
       { "label": "News", "url": "https://sambanova.ai/news/" }
-    ]
-  },
-  {
-    "company": "CoreWeave",
-    "slug": "coreweave",
-    "category": ["gpu_cloud", "ai_infrastructure"],
-    "dominance_bucket": "major",
-    "domain_key": "coreweave.com",
-    "domain_filter": {
-      "include": ["coreweave.com", "blog.coreweave.com"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://www.coreweave.com/blog" },
-      { "label": "News", "url": "https://www.coreweave.com/news" }
-    ]
-  },
-  {
-    "company": "Lambda Labs",
-    "slug": "lambda-labs",
-    "category": ["gpu_cloud", "ai_infrastructure"],
-    "dominance_bucket": "tooling",
-    "domain_key": "lambdalabs.com",
-    "domain_filter": { "include": ["lambdalabs.com"], "exclude": [] },
-    "sources": [
-      { "label": "Blog", "url": "https://lambdalabs.com/blog" },
-      { "label": "News", "url": "https://lambdalabs.com/news" }
-    ]
-  },
-  {
-    "company": "Replicate",
-    "slug": "replicate",
-    "category": ["model_hosting", "inference_platform"],
-    "dominance_bucket": "tooling",
-    "domain_key": "replicate.com",
-    "domain_filter": { "include": ["replicate.com"], "exclude": [] },
-    "sources": [
-      { "label": "Blog", "url": "https://replicate.com/blog" },
-      { "label": "Changelog", "url": "https://replicate.com/changelog" }
     ]
   },
   {
@@ -263,14 +181,10 @@
     "dominance_bucket": "major",
     "domain_key": "huggingface.co",
     "domain_filter": {
-      "include": ["huggingface.co", "github.com/huggingface"],
+      "include": ["huggingface.co"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://huggingface.co/blog" },
-      { "label": "Changelog", "url": "https://huggingface.co/changelog" },
-      { "label": "GitHub org", "url": "https://github.com/huggingface" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://huggingface.co/blog" }]
   },
   {
     "company": "DeepSeek",
@@ -279,18 +193,10 @@
     "dominance_bucket": "major",
     "domain_key": "deepseek.com",
     "domain_filter": {
-      "include": [
-        "deepseek.com",
-        "platform.deepseek.com",
-        "github.com/deepseek-ai"
-      ],
+      "include": ["deepseek.ai"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Main site", "url": "https://www.deepseek.com/en" },
-      { "label": "API platform", "url": "https://platform.deepseek.com/" },
-      { "label": "GitHub org", "url": "https://github.com/deepseek-ai" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://deepseek.ai/blog" }]
   },
   {
     "company": "xAI",
@@ -350,43 +256,20 @@
     ]
   },
   {
-    "company": "Stability AI",
-    "slug": "stability-ai",
-    "category": ["model_provider", "generative_ai", "open_models"],
-    "dominance_bucket": "major",
-    "domain_key": "stability.ai",
-    "domain_filter": {
-      "include": ["stability.ai", "github.com/Stability-AI"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "News", "url": "https://stability.ai/news" },
-      { "label": "Blog", "url": "https://stability.ai/blog" },
-      { "label": "GitHub org", "url": "https://github.com/Stability-AI" }
-    ]
-  },
-  {
     "company": "Replit",
     "slug": "replit",
     "category": ["ai_dev_platform", "cloud_ide"],
     "dominance_bucket": "tooling",
     "domain_key": "replit.com",
     "domain_filter": {
-      "include": [
-        "replit.com",
-        "blog.replit.com",
-        "docs.replit.com",
-        "status.replit.com"
-      ],
+      "include": ["replit.com", "blog.replit.com"],
       "exclude": []
     },
     "sources": [
       {
         "label": "Product/engineering blog",
         "url": "https://blog.replit.com/"
-      },
-      { "label": "Docs", "url": "https://docs.replit.com/" },
-      { "label": "Status", "url": "https://status.replit.com/" }
+      }
     ]
   },
   {
@@ -397,14 +280,10 @@
     "dominance_bucket": "tooling",
     "domain_key": "cursor.com",
     "domain_filter": {
-      "include": ["cursor.com", "docs.cursor.com", "forum.cursor.com"],
+      "include": ["cursor.com"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Changelog", "url": "https://cursor.com/changelog" },
-      { "label": "Docs", "url": "https://docs.cursor.com/" },
-      { "label": "Community forum", "url": "https://forum.cursor.com/" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://cursor.com/blog" }]
   },
   {
     "company": "Windsurf (Codeium)",
@@ -413,21 +292,14 @@
     "dominance_bucket": "tooling",
     "domain_key": "windsurf.com",
     "domain_filter": {
-      "include": [
-        "windsurf.com",
-        "docs.windsurf.com",
-        "windsurf.dev",
-        "codeium.com"
-      ],
+      "include": ["windsurf.com"],
       "exclude": []
     },
     "sources": [
       {
-        "label": "Product announcements",
-        "url": "https://windsurf.com/blog?tag=product"
-      },
-      { "label": "Docs", "url": "https://docs.windsurf.com/" },
-      { "label": "Windsurf.dev blog", "url": "https://www.windsurf.dev/blog" }
+        "label": "Blogs",
+        "url": "https://windsurf.com/blog"
+      }
     ]
   },
   {
@@ -438,14 +310,9 @@
     "dominance_bucket": "tooling",
     "domain_key": "exa.ai",
     "domain_filter": {
-      "include": ["exa.ai", "docs.exa.ai", "github.com/exa-labs"],
-      "exclude": []
+      "include": ["exa.ai"]
     },
-    "sources": [
-      { "label": "Blog", "url": "https://exa.ai/blog" },
-      { "label": "Docs", "url": "https://docs.exa.ai/" },
-      { "label": "Changelog", "url": "https://docs.exa.ai/changelog" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://exa.ai/blog" }]
   },
   {
     "company": "ElevenLabs",
@@ -454,32 +321,10 @@
     "dominance_bucket": "major",
     "domain_key": "elevenlabs.io",
     "domain_filter": {
-      "include": ["elevenlabs.io", "github.com/elevenlabs"],
+      "include": ["elevenlabs.io"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://elevenlabs.io/blog" },
-      {
-        "label": "Docs changelog",
-        "url": "https://elevenlabs.io/docs/changelog"
-      },
-      { "label": "GitHub org", "url": "https://github.com/elevenlabs" }
-    ]
-  },
-  {
-    "company": "Runway",
-    "slug": "runway",
-    "category": ["ai_video", "generative_ai"],
-    "dominance_bucket": "major",
-    "domain_key": "runwayml.com",
-    "domain_filter": {
-      "include": ["runwayml.com", "research.runwayml.com"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://runwayml.com/blog/" },
-      { "label": "Research", "url": "https://research.runwayml.com/" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://elevenlabs.io/blog" }]
   },
   {
     "company": "Midjourney",
@@ -488,40 +333,10 @@
     "dominance_bucket": "major",
     "domain_key": "midjourney.com",
     "domain_filter": {
-      "include": ["midjourney.com", "docs.midjourney.com"],
+      "include": ["midjourney.com"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Updates", "url": "https://midjourney.com/updates" },
-      { "label": "Showcase", "url": "https://midjourney.com/showcase" }
-    ]
-  },
-  {
-    "company": "Pika Labs",
-    "slug": "pika-labs",
-    "category": ["ai_video", "generative_ai"],
-    "dominance_bucket": "major",
-    "domain_key": "pika.art",
-    "domain_filter": { "include": ["pika.art"], "exclude": [] },
-    "sources": [
-      { "label": "Updates", "url": "https://pika.art/updates" },
-      { "label": "Blog", "url": "https://pika.art/blog" }
-    ]
-  },
-  {
-    "company": "Jasper AI",
-    "slug": "jasper",
-    "category": ["ai_writing", "marketing_ai"],
-    "dominance_bucket": "tooling",
-    "domain_key": "jasper.ai",
-    "domain_filter": {
-      "include": ["jasper.ai", "blog.jasper.ai"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://www.jasper.ai/blog" },
-      { "label": "What's New", "url": "https://www.jasper.ai/whats-new" }
-    ]
+    "sources": [{ "label": "Updates", "url": "https://midjourney.com/updates" }]
   },
   {
     "company": "OpenRouter",
@@ -538,8 +353,7 @@
       {
         "label": "Announcements archive",
         "url": "https://openrouter.ai/announcements/all"
-      },
-      { "label": "Docs", "url": "https://openrouter.ai/docs" }
+      }
     ]
   },
   {
@@ -549,17 +363,10 @@
     "dominance_bucket": "tooling",
     "domain_key": "supermemory.ai",
     "domain_filter": {
-      "include": ["supermemory.ai", "github.com/supermemoryai"],
+      "include": ["supermemory.ai"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Docs", "url": "https://supermemory.ai/docs/introduction" },
-      {
-        "label": "Release notes / changelog",
-        "url": "https://supermemory.ai/docs/changelog/overview"
-      },
-      { "label": "GitHub org", "url": "https://github.com/supermemoryai" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://supermemory.ai/blog" }]
   },
   {
     "company": "Pinecone",
@@ -571,10 +378,7 @@
       "include": ["pinecone.io", "www.pinecone.io"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://www.pinecone.io/blog/" },
-      { "label": "Learn Hub", "url": "https://www.pinecone.io/learn/" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://www.pinecone.io/blog/" }]
   },
   {
     "company": "Weaviate",
@@ -583,28 +387,10 @@
     "dominance_bucket": "tooling",
     "domain_key": "weaviate.io",
     "domain_filter": {
-      "include": ["weaviate.io", "github.com/weaviate"],
+      "include": ["weaviate.io"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://weaviate.io/blog" },
-      { "label": "GitHub org", "url": "https://github.com/weaviate" }
-    ]
-  },
-  {
-    "company": "Qdrant",
-    "slug": "qdrant",
-    "category": ["vector_database", "rag_infra"],
-    "dominance_bucket": "tooling",
-    "domain_key": "qdrant.tech",
-    "domain_filter": {
-      "include": ["qdrant.tech", "github.com/qdrant"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://qdrant.tech/blog/" },
-      { "label": "GitHub org", "url": "https://github.com/qdrant" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://weaviate.io/blog" }]
   },
   {
     "company": "LangChain",
@@ -613,28 +399,11 @@
     "dominance_bucket": "tooling",
     "domain_key": "langchain.com",
     "domain_filter": {
-      "include": [
-        "langchain.com",
-        "langchain.dev",
-        "docs.langchain.com",
-        "changelog.langchain.com",
-        "github.com/langchain-ai"
-      ],
+      "include": ["langchain.com", "blog.langchain.com"],
       "exclude": []
     },
     "sources": [
-      {
-        "label": "Official changelog",
-        "url": "https://changelog.langchain.com/"
-      },
-      {
-        "label": "Docs changelog (OSS)",
-        "url": "https://docs.langchain.com/oss/python/releases/changelog"
-      },
-      {
-        "label": "GitHub releases",
-        "url": "https://github.com/langchain-ai/langchain/releases"
-      }
+      { "label": "LangChain Blogs", "url": "https://blog.langchain.com/" }
     ]
   },
   {
@@ -644,40 +413,10 @@
     "dominance_bucket": "tooling",
     "domain_key": "llamaindex.ai",
     "domain_filter": {
-      "include": ["llamaindex.ai", "www.llamaindex.ai", "github.com/run-llama"],
+      "include": ["llamaindex.ai", "www.llamaindex.ai"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://www.llamaindex.ai/blog" },
-      { "label": "GitHub org", "url": "https://github.com/run-llama" }
-    ]
-  },
-  {
-    "company": "CrewAI",
-    "slug": "crewai",
-    "category": ["agent_framework", "multi_agent"],
-    "dominance_bucket": "tooling",
-    "domain_key": "crewai.com",
-    "domain_filter": {
-      "include": ["crewai.com", "www.crewai.com", "github.com/crewAIInc"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://www.crewai.com/blog" },
-      { "label": "GitHub org", "url": "https://github.com/crewAIInc" }
-    ]
-  },
-  {
-    "company": "Scale AI",
-    "slug": "scale-ai",
-    "category": ["data_platform", "ai_infrastructure"],
-    "dominance_bucket": "major",
-    "domain_key": "scale.com",
-    "domain_filter": { "include": ["scale.com", "scale.ai"], "exclude": [] },
-    "sources": [
-      { "label": "Blog", "url": "https://scale.com/blog" },
-      { "label": "Resources", "url": "https://scale.com/resources" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://www.llamaindex.ai/blog" }]
   },
   {
     "company": "Vercel",
@@ -686,15 +425,7 @@
     "dominance_bucket": "major",
     "domain_key": "vercel.com",
     "domain_filter": { "include": ["vercel.com", "nextjs.org"], "exclude": [] },
-    "sources": [
-      { "label": "Blog", "url": "https://vercel.com/blog" },
-      { "label": "Changelog", "url": "https://vercel.com/changelog" },
-      { "label": "Docs", "url": "https://vercel.com/docs" },
-      {
-        "label": "Community announcements",
-        "url": "https://community.vercel.com/c/announcements/27"
-      }
-    ]
+    "sources": [{ "label": "AI blog", "url": "https://vercel.com/blog" }]
   },
   {
     "company": "Cloudflare",
@@ -707,68 +438,9 @@
       "exclude": []
     },
     "sources": [
-      { "label": "Main blog", "url": "https://blog.cloudflare.com/" },
       {
-        "label": "Docs changelog (all)",
-        "url": "https://developers.cloudflare.com/changelog/"
-      },
-      {
-        "label": "Workers platform changelog",
-        "url": "https://developers.cloudflare.com/workers/platform/changelog/"
-      }
-    ]
-  },
-  {
-    "company": "Fly.io",
-    "slug": "fly-io",
-    "category": ["app_platform", "infra"],
-    "dominance_bucket": "major",
-    "domain_key": "fly.io",
-    "domain_filter": {
-      "include": ["fly.io", "status.flyio.net"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://fly.io/blog/" },
-      { "label": "Docs", "url": "https://fly.io/docs/" },
-      { "label": "Status", "url": "https://status.flyio.net/" }
-    ]
-  },
-  {
-    "company": "Neon",
-    "slug": "neon",
-    "category": ["database", "serverless_postgres"],
-    "dominance_bucket": "major",
-    "domain_key": "neon.com",
-    "domain_filter": {
-      "include": ["neon.com", "neon.tech", "github.com/neondatabase"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://neon.tech/blog" },
-      { "label": "Docs changelog", "url": "https://neon.com/docs/changelog" },
-      {
-        "label": "Changelog blog category",
-        "url": "https://neon.com/blog/category/changelog"
-      }
-    ]
-  },
-  {
-    "company": "Zed",
-    "slug": "zed",
-    "category": ["code_editor"],
-    "dominance_bucket": "tooling",
-    "domain_key": "zed.dev",
-    "domain_filter": {
-      "include": ["zed.dev", "github.com/zed-industries"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Blog", "url": "https://zed.dev/blog" },
-      { "label": "Stable releases", "url": "https://zed.dev/releases/stable" },
-      {
-        "label": "GitHub releases",
-        "url": "https://github.com/zed-industries/zed/releases"
+        "label": "AI blog",
+        "url": "https://blog.cloudflare.com/tag/ai/"
       }
     ]
   },
@@ -779,24 +451,10 @@
     "dominance_bucket": "tooling",
     "domain_key": "bolt.new",
     "domain_filter": {
-      "include": [
-        "bolt.new",
-        "support.bolt.new",
-        "github.com/stackblitz/bolt.new",
-        "blog.stackblitz.com"
-      ],
+      "include": ["bolt.new", "support.bolt.new", "blog.stackblitz.com"],
       "exclude": []
     },
     "sources": [
-      {
-        "label": "Release notes",
-        "url": "https://support.bolt.new/release-notes"
-      },
-      { "label": "Status", "url": "https://support.bolt.new/status" },
-      {
-        "label": "GitHub repo",
-        "url": "https://github.com/stackblitz/bolt.new"
-      },
       { "label": "StackBlitz blog", "url": "https://blog.stackblitz.com/" }
     ]
   },
@@ -808,13 +466,10 @@
     "dominance_bucket": "tooling",
     "domain_key": "tanstack.com",
     "domain_filter": {
-      "include": ["tanstack.com", "github.com/TanStack"],
+      "include": ["tanstack.com"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://tanstack.com/blog" },
-      { "label": "GitHub org", "url": "https://github.com/TanStack" }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://tanstack.com/blog" }]
   },
   {
     "company": "n8n",
@@ -823,17 +478,10 @@
     "dominance_bucket": "tooling",
     "domain_key": "n8n.io",
     "domain_filter": {
-      "include": ["n8n.io", "docs.n8n.io", "github.com/n8n-io"],
+      "include": ["n8n.io"],
       "exclude": []
     },
-    "sources": [
-      { "label": "Blog", "url": "https://n8n.io/blog/" },
-      { "label": "Release notes", "url": "https://docs.n8n.io/release-notes/" },
-      {
-        "label": "GitHub releases",
-        "url": "https://github.com/n8n-io/n8n/releases"
-      }
-    ]
+    "sources": [{ "label": "Blog", "url": "https://n8n.io/blog/" }]
   },
   {
     "company": "Lovable",
@@ -842,80 +490,13 @@
     "dominance_bucket": "tooling",
     "domain_key": "lovable.dev",
     "domain_filter": {
-      "include": ["lovable.dev", "docs.lovable.dev", "github.com/lovablelabs"],
+      "include": ["lovable.dev"],
       "exclude": []
     },
     "sources": [
       {
-        "label": "Product changelog",
-        "url": "https://docs.lovable.dev/changelog"
-      },
-      { "label": "Support hub", "url": "https://lovable.dev/support" },
-      { "label": "Docs repo", "url": "https://github.com/lovablelabs/docs" }
-    ]
-  },
-  {
-    "company": "GraphQL (ecosystem)",
-    "slug": "graphql",
-    "aliases": ["Graphql"],
-    "category": ["api_standard", "ecosystem"],
-    "dominance_bucket": "ecosystem",
-    "domain_key": "graphql.org",
-    "domain_filter": {
-      "include": ["graphql.org", "github.com/graphql"],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Official blog", "url": "https://graphql.org/blog/" },
-      {
-        "label": "Blogs & newsletters list",
-        "url": "https://graphql.org/community/resources/blogs-and-newsletters/"
-      },
-      { "label": "Spec repo", "url": "https://github.com/graphql/graphql-spec" }
-    ]
-  },
-  {
-    "company": "NestJS",
-    "slug": "nestjs",
-    "category": ["backend_framework", "nodejs"],
-    "dominance_bucket": "ecosystem",
-    "domain_key": "nestjs.com",
-    "domain_filter": {
-      "include": [
-        "docs.nestjs.com",
-        "nestjs.com",
-        "nestjs.io",
-        "github.com/nestjs"
-      ],
-      "exclude": []
-    },
-    "sources": [
-      { "label": "Docs", "url": "https://docs.nestjs.com/" },
-      {
-        "label": "Ecosystem hub (news/tutorials/packages)",
-        "url": "https://nestjs.io/"
-      },
-      {
-        "label": "Docs repo",
-        "url": "https://github.com/nestjs/docs.nestjs.com"
-      },
-      { "label": "Trilon blog", "url": "https://trilon.io/blog" }
-    ]
-  },
-  {
-    "company": "DeepLearning.AI",
-    "slug": "deeplearning-ai",
-    "aliases": ["dee[;earmomg/ao"],
-    "category": ["ai_newsletter", "education"],
-    "dominance_bucket": "media",
-    "domain_key": "deeplearning.ai",
-    "domain_filter": { "include": ["deeplearning.ai"], "exclude": [] },
-    "sources": [
-      { "label": "The Batch", "url": "https://www.deeplearning.ai/the-batch/" },
-      { "label": "Blog", "url": "https://www.deeplearning.ai/blog/" },
-      {
-        "label": "News & events",
-        "url": "https://www.deeplearning.ai/blog/category/news-and-events/"
+        "label": "Blog",
+        "url": "https://lovable.dev/blog"
       }
     ]
   }

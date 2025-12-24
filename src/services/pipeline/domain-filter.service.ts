@@ -173,3 +173,51 @@ export function domainMatchesPattern(domain: string, pattern: string): boolean {
     normalizedDomain.endsWith(`.${normalizedPattern}`)
   );
 }
+
+/**
+ * Check if article URL is under any of the specified source URLs
+ * This ensures articles are only from the exact source URL paths defined in sources.json
+ *
+ * Examples:
+ *   articleUrl: "https://openai.com/news/gpt4-launch"
+ *   sourceUrls: ["https://openai.com/news/"]
+ *   Result: true (article is under /news/ path)
+ *
+ *   articleUrl: "https://openai.com/research/paper"
+ *   sourceUrls: ["https://openai.com/news/"]
+ *   Result: false (article is under /research/, not /news/)
+ */
+export function isUrlUnderSource(
+  articleUrl: string,
+  sourceUrls: string[],
+): boolean {
+  try {
+    const articleUrlObj = new URL(articleUrl);
+
+    for (const sourceUrl of sourceUrls) {
+      const sourceUrlObj = new URL(sourceUrl);
+
+      // Check domain matches
+      if (articleUrlObj.hostname !== sourceUrlObj.hostname) {
+        continue;
+      }
+
+      // Normalize paths (remove trailing slashes for comparison)
+      const sourcePath = sourceUrlObj.pathname.replace(/\/$/, "");
+      const articlePath = articleUrlObj.pathname;
+
+      // Check if article path starts with source path
+      if (
+        articlePath.startsWith(sourcePath) ||
+        articlePath.startsWith(`${sourcePath}/`)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  } catch (error) {
+    console.error(`Error validating URL against sources: ${articleUrl}`, error);
+    return false;
+  }
+}

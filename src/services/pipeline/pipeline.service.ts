@@ -145,6 +145,9 @@ export class PipelineService {
     const sources = company.sources as Source[];
     const domainFilter = company.domainFilter as DomainFilter;
 
+    // Collect all source URLs for strict path filtering
+    const allSourceUrls = sources.map((s) => s.url);
+
     let totalFound = 0;
     let totalSaved = 0;
     let totalDuplicates = 0;
@@ -209,7 +212,7 @@ export class PipelineService {
           continue;
         }
 
-        // Extract articles with AI, passing existing articles as context
+        // Extract articles with AI, passing existing articles as context and all source URLs for strict filtering
         const articles = await this.extractionAgent.extractArticlesWithRetry(
           searchResults,
           {
@@ -222,6 +225,7 @@ export class PipelineService {
           dateRangeDays,
           existingArticles,
           isFirstFetch,
+          allSourceUrls,
         );
 
         console.log(`    Extracted ${articles.length} articles`);
