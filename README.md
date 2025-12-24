@@ -42,6 +42,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Add remote postgress db so that we can use it on prod.
 - [x] From admin panle we should be able to trigger pipeline for a soruce to fetch all from source or fetch for specific ranges and add.
 - [x] Add login sign up via clerk. So that admin routes are protected.
+- [ ] Fix pipeline in prod not ending on total articles fetched. Fetching starts again and fetches more than total companies.
 - [ ] Give users abilty to add new sources so they can track new companies and articles.
 - [ ] Persist the user's selected companies and sources so they are persisted in the database.
 - [ ] Add a way to subscribe to the daily updates via email to the users.
