@@ -5,7 +5,6 @@ import {
   Calendar,
   ExternalLink,
   FileText,
-  Filter,
   Search,
   X,
 } from "lucide-react";
@@ -39,7 +38,6 @@ export function ArticlesPage({
     setCustomEndDate,
   } = useArticles(initialArticles);
 
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [dateDropdownOpen, setDateDropdownOpen] = useState(false);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -157,15 +155,6 @@ export function ArticlesPage({
               </p>
             </div>
             <div className="flex items-center gap-3">
-              {/* Mobile Filter Button */}
-              <button
-                type="button"
-                onClick={() => setMobileFiltersOpen(true)}
-                className="lg:hidden flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
-              >
-                <Filter className="h-4 w-4" />
-                Filters
-              </button>
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
                 <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-gray-400 hidden sm:inline">
@@ -178,11 +167,12 @@ export function ArticlesPage({
           <main className="w-full">
             {/* Sticky Search Bar & Filters */}
             <div className="sticky top-16 z-30 -mx-4 bg-[#0A0A0A]/95 px-4 backdrop-blur-lg sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-              {/* Search Bar */}
-              <div className="py-4">
-                <div className="flex flex-wrap gap-3">
+              {/* Search Bar & Filters */}
+              <div className="py-4 space-y-3">
+                {/* Row 1: Search Input (Full Width on Mobile) */}
+                <div className="flex gap-3">
                   {/* Search Input */}
-                  <div className="relative flex-1 min-w-[200px]">
+                  <div className="relative flex-1">
                     <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-4">
                       <Search className="h-5 w-5 mb-0.5 text-gray-500" />
                     </div>
@@ -194,7 +184,10 @@ export function ArticlesPage({
                       className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-6 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
+                </div>
 
+                {/* Row 2: Filter Buttons (Category, Companies, Date) */}
+                <div className="flex flex-wrap gap-3">
                   {/* Category Dropdown */}
                   <div className="relative">
                     <button
@@ -221,7 +214,7 @@ export function ArticlesPage({
                           aria-label="Close dropdown"
                           tabIndex={-1}
                         />
-                        <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl">
+                        <div className="absolute left-0 sm:right-0 sm:left-auto top-full z-50 mt-2 w-72 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl">
                           <div className="scrollbar-hidden max-h-96 space-y-1 overflow-y-auto">
                             {categories.map((category) => (
                               <label
@@ -273,7 +266,7 @@ export function ArticlesPage({
                           aria-label="Close dropdown"
                           tabIndex={-1}
                         />
-                        <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl">
+                        <div className="absolute left-0 sm:right-0 sm:left-auto top-full z-50 mt-2 w-72 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl">
                           <div className="scrollbar-hidden max-h-96 space-y-1 overflow-y-auto">
                             {companies.map((company) => (
                               <label
@@ -323,7 +316,7 @@ export function ArticlesPage({
                           aria-label="Close dropdown"
                           tabIndex={-1}
                         />
-                        <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl backdrop-blur-sm">
+                        <div className="absolute left-0 sm:right-0 sm:left-auto top-full z-50 mt-2 w-64 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl backdrop-blur-sm">
                           <div className="space-y-1">
                             {(
                               [
@@ -508,90 +501,6 @@ export function ArticlesPage({
         </div>
       </div>
 
-      {/* Mobile Filter Drawer */}
-      {mobileFiltersOpen && (
-        <>
-          {/* Backdrop */}
-          <button
-            type="button"
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
-            aria-label="Close filters"
-            onClick={() => setMobileFiltersOpen(false)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
-                setMobileFiltersOpen(false);
-              }
-            }}
-          />
-
-          {/* Drawer */}
-          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-[#0A0A0A] border-l border-white/10 overflow-y-auto lg:hidden">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-[#0A0A0A]/95 backdrop-blur-sm px-4 py-4">
-              <h2 className="text-lg font-semibold text-white">Filters</h2>
-              <button
-                type="button"
-                onClick={() => setMobileFiltersOpen(false)}
-                className="rounded-lg p-2 text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
-                aria-label="Close filters"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="p-4 space-y-3">
-              {/* Category Filter - Mobile */}
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-                <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Category
-                </h4>
-                <div className="scrollbar-hidden max-h-48 space-y-1 overflow-y-auto pr-2">
-                  {categories.map((category) => (
-                    <label
-                      key={category}
-                      className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 hover:bg-white/5 transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedCategories.includes(category)}
-                        onChange={() => toggleCategory(category)}
-                        className="h-4 w-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0"
-                      />
-                      <span className="text-sm text-gray-300">
-                        {formatCategoryLabel(category)}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Company Filter - Mobile */}
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-                <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Companies
-                </h4>
-                <div className="scrollbar-hidden max-h-64 space-y-1 overflow-y-auto pr-2">
-                  {companies.map((company) => (
-                    <label
-                      key={company.slug}
-                      className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 hover:bg-white/5 transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedCompanies.includes(company.slug)}
-                        onChange={() => toggleCompany(company.slug)}
-                        className="h-4 w-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0"
-                      />
-                      <span className="text-sm text-gray-300">
-                        {company.name}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 }
