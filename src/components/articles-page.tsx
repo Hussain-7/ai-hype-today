@@ -1,13 +1,7 @@
 "use client";
 
 import { format, formatDistanceToNow } from "date-fns";
-import {
-  Calendar,
-  ExternalLink,
-  FileText,
-  Search,
-  X,
-} from "lucide-react";
+import { Calendar, ExternalLink, FileText, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { type DateRangeType, useArticles } from "@/hooks/useArticles";
 import type { Article } from "@/lib/get-articles";
@@ -500,7 +494,6 @@ export function ArticlesPage({
           </main>
         </div>
       </div>
-
     </div>
   );
 }
