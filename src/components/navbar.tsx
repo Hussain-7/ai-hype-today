@@ -10,7 +10,7 @@ export function Navbar() {
   const isAdmin = metadata?.isAdmin === true;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0A0A0A]/80 backdrop-blur-lg">
+    <nav className="sticky top-0 z-50 border-b bg-[#0A0A0A] border-white/10 backdrop-blur-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 sm:h-16 items-center justify-between">
           {/* Logo */}

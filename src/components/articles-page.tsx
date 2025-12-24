@@ -2,7 +2,10 @@
 
 import { format, formatDistanceToNow } from "date-fns";
 import { Calendar, ExternalLink, FileText, Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
+import { SearchableMultiSelect } from "@/components/ui/searchable-multi-select";
+import { SingleSelectDropdown } from "@/components/ui/single-select-dropdown";
 import { type DateRangeType, useArticles } from "@/hooks/useArticles";
 import type { Article } from "@/lib/get-articles";
 
@@ -32,9 +35,7 @@ export function ArticlesPage({
     setCustomEndDate,
   } = useArticles(initialArticles);
 
-  const [dateDropdownOpen, setDateDropdownOpen] = useState(false);
-  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-  const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
+  // Dropdown state managed by shadcn components
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -178,223 +179,93 @@ export function ArticlesPage({
                     />
                   </div>
 
-                  {/* Category Dropdown */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setCategoryDropdownOpen(!categoryDropdownOpen)
-                      }
-                      className="flex items-center gap-2 whitespace-nowrap rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10"
-                    >
-                      <span>Category</span>
-                      {selectedCategories.length > 0 && (
-                        <span className="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
-                          {selectedCategories.length}
-                        </span>
-                      )}
-                    </button>
+                  {/* Category Filter */}
+                  <MultiSelectDropdown
+                    label="Category"
+                    options={categories.map((cat) => ({
+                      value: cat,
+                      label: formatCategoryLabel(cat),
+                    }))}
+                    selectedValues={selectedCategories}
+                    onValueChange={toggleCategory}
+                  />
 
-                    {categoryDropdownOpen && (
-                      <>
-                        <button
-                          type="button"
-                          className="fixed inset-0 z-40"
-                          onClick={() => setCategoryDropdownOpen(false)}
-                          aria-label="Close dropdown"
-                          tabIndex={-1}
-                        />
-                        <div className="absolute left-0 sm:right-0 sm:left-auto top-full z-50 mt-2 w-72 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl">
-                          <div className="scrollbar-hidden max-h-96 space-y-1 overflow-y-auto">
-                            {categories.map((category) => (
-                              <label
-                                key={category}
-                                className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/5 transition-colors"
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={selectedCategories.includes(
-                                    category,
-                                  )}
-                                  onChange={() => toggleCategory(category)}
-                                  className="h-4 w-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                                />
-                                <span className="text-sm text-gray-300">
-                                  {formatCategoryLabel(category)}
-                                </span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      </>
+                  {/* Companies Filter - Searchable */}
+                  <SearchableMultiSelect
+                    label="Companies"
+                    options={companies.map((company) => ({
+                      value: company.slug,
+                      label: company.name,
+                    }))}
+                    selectedValues={selectedCompanies}
+                    onValueChange={toggleCompany}
+                    searchPlaceholder="Search companies..."
+                  />
+
+                  {/* Date Range Filter */}
+                  <SingleSelectDropdown
+                    triggerIcon={<Calendar className="h-4 w-4" />}
+                    triggerLabel={getDateRangeLabel(dateRangeType)}
+                    options={[
+                      { value: "all" as DateRangeType, label: "All Time" },
+                      { value: "today" as DateRangeType, label: "Today" },
+                      { value: "week" as DateRangeType, label: "This Week" },
+                      { value: "month" as DateRangeType, label: "This Month" },
+                      {
+                        value: "custom" as DateRangeType,
+                        label: "Custom Range",
+                      },
+                    ]}
+                    selectedValue={dateRangeType}
+                    onValueChange={setDateRangeType}
+                  >
+                    {dateRangeType === "custom" && (
+                      <div className="mt-3 space-y-2 border-t border-white/10 pt-3 px-2">
+                        <label className="block">
+                          <span className="text-xs text-gray-400">
+                            Start Date
+                          </span>
+                          <input
+                            type="date"
+                            value={
+                              customStartDate
+                                ? format(customStartDate, "yyyy-MM-dd")
+                                : ""
+                            }
+                            onChange={(e) =>
+                              setCustomStartDate(
+                                e.target.value
+                                  ? new Date(e.target.value)
+                                  : null,
+                              )
+                            }
+                            className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          />
+                        </label>
+                        <label className="block">
+                          <span className="text-xs text-gray-400">
+                            End Date
+                          </span>
+                          <input
+                            type="date"
+                            value={
+                              customEndDate
+                                ? format(customEndDate, "yyyy-MM-dd")
+                                : ""
+                            }
+                            onChange={(e) =>
+                              setCustomEndDate(
+                                e.target.value
+                                  ? new Date(e.target.value)
+                                  : null,
+                              )
+                            }
+                            className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          />
+                        </label>
+                      </div>
                     )}
-                  </div>
-
-                  {/* Company Dropdown */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setCompanyDropdownOpen(!companyDropdownOpen)
-                      }
-                      className="flex items-center gap-2 whitespace-nowrap rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10"
-                    >
-                      <span>Companies</span>
-                      {selectedCompanies.length > 0 && (
-                        <span className="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
-                          {selectedCompanies.length}
-                        </span>
-                      )}
-                    </button>
-
-                    {companyDropdownOpen && (
-                      <>
-                        <button
-                          type="button"
-                          className="fixed inset-0 z-40"
-                          onClick={() => setCompanyDropdownOpen(false)}
-                          aria-label="Close dropdown"
-                          tabIndex={-1}
-                        />
-                        <div className="absolute left-0 sm:right-0 sm:left-auto top-full z-50 mt-2 w-72 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl">
-                          <div className="scrollbar-hidden max-h-96 space-y-1 overflow-y-auto">
-                            {companies.map((company) => (
-                              <label
-                                key={company.slug}
-                                className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/5 transition-colors"
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={selectedCompanies.includes(
-                                    company.slug,
-                                  )}
-                                  onChange={() => toggleCompany(company.slug)}
-                                  className="h-4 w-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                                />
-                                <span className="text-sm text-gray-300">
-                                  {company.name}
-                                </span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Date Range Dropdown */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setDateDropdownOpen(!dateDropdownOpen)}
-                      className="flex items-center gap-2 whitespace-nowrap rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10"
-                    >
-                      <Calendar className="h-4 w-4" />
-                      <span className="hidden sm:inline">
-                        {getDateRangeLabel(dateRangeType)}
-                      </span>
-                    </button>
-
-                    {/* Dropdown Menu */}
-                    {dateDropdownOpen && (
-                      <>
-                        {/* Backdrop */}
-                        <button
-                          type="button"
-                          className="fixed inset-0 z-40"
-                          onClick={() => setDateDropdownOpen(false)}
-                          aria-label="Close dropdown"
-                          tabIndex={-1}
-                        />
-                        <div className="absolute left-0 sm:right-0 sm:left-auto top-full z-50 mt-2 w-64 rounded-xl border border-white/10 bg-[#0A0A0A] p-3 shadow-xl backdrop-blur-sm">
-                          <div className="space-y-1">
-                            {(
-                              [
-                                "all",
-                                "today",
-                                "week",
-                                "month",
-                              ] as DateRangeType[]
-                            ).map((type) => (
-                              <button
-                                key={type}
-                                type="button"
-                                onClick={() => {
-                                  setDateRangeType(type);
-                                  setDateDropdownOpen(false);
-                                }}
-                                className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                                  dateRangeType === type
-                                    ? "bg-blue-500/20 text-blue-400"
-                                    : "text-gray-300 hover:bg-white/5"
-                                }`}
-                              >
-                                {getDateRangeLabel(type)}
-                              </button>
-                            ))}
-                            <button
-                              type="button"
-                              onClick={() => setDateRangeType("custom")}
-                              className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                                dateRangeType === "custom"
-                                  ? "bg-blue-500/20 text-blue-400"
-                                  : "text-gray-300 hover:bg-white/5"
-                              }`}
-                            >
-                              Custom Range
-                            </button>
-                          </div>
-
-                          {dateRangeType === "custom" && (
-                            <div className="mt-3 space-y-2 border-t border-white/10 pt-3">
-                              <label className="block">
-                                <span className="text-xs text-gray-400">
-                                  Start Date
-                                </span>
-                                <input
-                                  type="date"
-                                  value={
-                                    customStartDate
-                                      ? format(customStartDate, "yyyy-MM-dd")
-                                      : ""
-                                  }
-                                  onChange={(e) =>
-                                    setCustomStartDate(
-                                      e.target.value
-                                        ? new Date(e.target.value)
-                                        : null,
-                                    )
-                                  }
-                                  className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                />
-                              </label>
-                              <label className="block">
-                                <span className="text-xs text-gray-400">
-                                  End Date
-                                </span>
-                                <input
-                                  type="date"
-                                  value={
-                                    customEndDate
-                                      ? format(customEndDate, "yyyy-MM-dd")
-                                      : ""
-                                  }
-                                  onChange={(e) =>
-                                    setCustomEndDate(
-                                      e.target.value
-                                        ? new Date(e.target.value)
-                                        : null,
-                                    )
-                                  }
-                                  className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                />
-                              </label>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </div>
+                  </SingleSelectDropdown>
                 </div>
               </div>
             </div>
