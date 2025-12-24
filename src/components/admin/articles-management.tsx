@@ -68,9 +68,11 @@ export function ArticlesManagement() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-3 py-12">
-        <div className="h-6 w-6 animate-spin rounded-full border-3 border-blue-500/30 border-t-blue-500" />
-        <p className="text-sm text-gray-400">Loading articles...</p>
+      <div className="flex items-center justify-center py-12">
+        <div className="flex items-center gap-3">
+          <div className="h-6 w-6 animate-spin rounded-full border-3 border-blue-500/30 border-t-blue-500" />
+          <p className="text-sm text-gray-400">Loading articles...</p>
+        </div>
       </div>
     );
   }
