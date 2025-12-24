@@ -162,11 +162,10 @@ export function ArticlesPage({
             {/* Sticky Search Bar & Filters */}
             <div className="sticky top-16 z-30 -mx-4 bg-[#0A0A0A]/95 px-4 backdrop-blur-lg sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
               {/* Search Bar & Filters */}
-              <div className="py-4 space-y-3">
-                {/* Row 1: Search Input (Full Width on Mobile) */}
-                <div className="flex gap-3">
+              <div className="py-4">
+                <div className="flex flex-wrap gap-3">
                   {/* Search Input */}
-                  <div className="relative flex-1">
+                  <div className="relative flex-1 min-w-full sm:min-w-[300px]">
                     <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-4">
                       <Search className="h-5 w-5 mb-0.5 text-gray-500" />
                     </div>
@@ -178,10 +177,7 @@ export function ArticlesPage({
                       className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-6 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
-                </div>
 
-                {/* Row 2: Filter Buttons (Category, Companies, Date) */}
-                <div className="flex flex-wrap gap-3">
                   {/* Category Dropdown */}
                   <div className="relative">
                     <button

@@ -60,11 +60,9 @@ export function CompaniesManagement() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-blue-500/30 border-t-blue-500" />
-          <p className="text-sm text-gray-400">Loading companies...</p>
-        </div>
+      <div className="flex items-center gap-3 py-12">
+        <div className="h-6 w-6 animate-spin rounded-full border-3 border-blue-500/30 border-t-blue-500" />
+        <p className="text-sm text-gray-400">Loading companies...</p>
       </div>
     );
   }
