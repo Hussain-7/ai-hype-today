@@ -19,7 +19,7 @@ export class TavilySearchService {
   }
 
   /**
-   * Search for content from a specific source URL
+   * Search for content from a specific source URL with multiple passes for maximum coverage
    */
   async searchSourceContent(
     sourceUrl: string,
@@ -28,49 +28,86 @@ export class TavilySearchService {
     fetchContext?: string,
   ): Promise<TavilyResult[]> {
     const cutoffDate = subDays(new Date(), dateRangeDays);
+    const isSubsequentFetch = fetchContext?.includes("subsequent fetch");
 
     try {
       const domain = new URL(sourceUrl).hostname;
 
-      // Build query with date context for subsequent fetches
-      let query = `site:${domain} ${companyName} articles blog posts news`;
-      const isSubsequentFetch = fetchContext?.includes("subsequent fetch");
-      if (isSubsequentFetch) {
-        // Add explicit date context for recent articles
-        const today = new Date();
-        const yesterday = subDays(today, 1);
-        query += ` (published:${
-          yesterday.toISOString().split("T")[0]
-        } OR published:${today.toISOString().split("T")[0]})`;
+      // Define multiple search query variations for comprehensive coverage
+      const queryVariations = [
+        // Pass 1: General content
+        `site:${domain} ${companyName} articles blog posts news`,
+        // Pass 2: Product/release focus
+        `site:${domain} ${companyName} updates announcements releases`,
+        // Pass 3: Technical content
+        `site:${domain} ${companyName} research engineering`,
+      ];
+
+      const allResults: TavilyResult[] = [];
+
+      // Run multiple search passes
+      for (const baseQuery of queryVariations) {
+        let query = baseQuery;
+
+        // Add date context for subsequent fetches
+        if (isSubsequentFetch) {
+          const today = new Date();
+          const yesterday = subDays(today, 1);
+          query += ` (published:${
+            yesterday.toISOString().split("T")[0]
+          } OR published:${today.toISOString().split("T")[0]})`;
+        }
+
+        try {
+          const results = await this.client.search({
+            query,
+            search_depth: "advanced",
+            max_results: 20,
+            include_answer: false,
+            include_images: false,
+          });
+
+          // Filter by date manually if publishedDate is available
+          const filteredResults = (results.results || [])
+            .filter((result: TavilyApiResult) => {
+              if (result.published_date) {
+                const publishedDate = new Date(result.published_date);
+                return publishedDate >= cutoffDate;
+              }
+              return true;
+            })
+            .map((result: TavilyApiResult) => ({
+              url: result.url,
+              title: result.title,
+              content: result.content,
+              score: Number.parseFloat(result.score) || 0,
+              published_date: result.published_date,
+            }));
+
+          allResults.push(...filteredResults);
+        } catch (error) {
+          console.error(`Search pass failed for query "${query}":`, error);
+          // Continue with other query variations
+        }
       }
 
-      const results = await this.client.search({
-        query,
-        search_depth: "advanced",
-        max_results: isSubsequentFetch ? 10 : 50,
-        include_answer: false,
-        include_images: false,
-      });
+      // Deduplicate by URL (keep highest score if duplicates)
+      const uniqueResults = Array.from(
+        new Map(
+          allResults
+            .sort((a, b) => b.score - a.score) // Sort by score descending
+            .map((item) => [item.url, item]),
+        ).values(),
+      );
+      console.log(
+        "All urls:",
+        uniqueResults.map((item) => item.url),
+      );
+      console.log(
+        `Multiple search passes: ${allResults.length} total → ${uniqueResults.length} unique results`,
+      );
 
-      // Filter by date manually if publishedDate is available
-      const filteredResults = (results.results || [])
-        .filter((result: TavilyApiResult) => {
-          if (result.published_date) {
-            const publishedDate = new Date(result.published_date);
-            return publishedDate >= cutoffDate;
-          }
-          // If no published date, include it (will be filtered by AI later)
-          return true;
-        })
-        .map((result: TavilyApiResult) => ({
-          url: result.url,
-          title: result.title,
-          content: result.content,
-          score: Number.parseFloat(result.score) || 0,
-          published_date: result.published_date,
-        }));
-
-      return filteredResults;
+      return uniqueResults;
     } catch (error) {
       console.error(`Tavily search failed for ${sourceUrl}:`, error);
       throw new Error(`Failed to search ${sourceUrl}: ${error}`);

@@ -9,7 +9,7 @@ export class ArticleExtractionAgent {
   private model: ReturnType<typeof google>;
 
   constructor() {
-    // Use Gemini 2.5 Flash for fast, cost-effective extraction with latest capabilities
+    // Use Gemini 2.5 Flash for fast, cost-effective extraction with web search capability
     this.model = google("gemini-2.5-flash-lite");
   }
 
@@ -64,7 +64,9 @@ FIRST FETCH: This is the first time we're fetching from this source. Extract all
 `;
 
     const prompt = `
-You are an AI article extractor for an AI news aggregation platform.
+You are an AI article extractor for an AI news aggregation platform with web search capability.
+
+You can use Google Search to verify if URLs are real articles and not any listing pages before extracting them.
 
 Company: ${company.name}
 Source: ${sourceLabel} (${sourceUrl})
@@ -90,9 +92,16 @@ ${JSON.stringify(searchResults, null, 2)}
 
 EXTRACTION RULES:
 
-1. URL Validation:
+1. URL Validation (USE WEB SEARCH TO VERIFY):
    - Article URL MUST start with one of the allowed source URL paths above
    - Article URL MUST NOT be exactly equal to any source URL (those are listing pages)
+   - If URL looks ambiguous (e.g., /news/research/, /blog/ai/), use Google Search to verify it's a REAL ARTICLE:
+     * Search for the URL to confirm it's an individual article page
+     * If search shows it's a category/listing page → REJECT IT
+     * If search confirms it's a genuine article → ACCEPT IT
+     * When in doubt, search and verify before extracting
+   - ONLY extract URLs that are confirmed individual articles
+   - NEVER extract listing pages, category pages, or index pages
 
 2. Date Requirements:
    - Published within the last ${dateRangeDays} days (after ${cutoffDate.toISOString()})
@@ -124,10 +133,13 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
       const { output } = await generateText({
         model: this.model,
         prompt,
+        tools: {
+          google_search: google.tools.googleSearch({}),
+        },
         output: Output.object({
           schema: ArticleListSchema,
         }),
-        temperature: 0.3, // Lower temperature for more consistent extraction
+        temperature: 0.5, // Balanced temperature for comprehensive extraction while maintaining quality
       });
 
       // SIMPLIFIED FILTERING: Only validate against source URLs
@@ -148,23 +160,35 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
 
         const normalizedArticleUrl = normalizeUrl(article.url);
 
-        // Check if article URL starts with any source URL (but is not exactly the source URL)
-        const isValid = sourceUrlsToCheck.some((srcUrl) => {
-          const normalizedSource = normalizeUrl(srcUrl);
-          return (
-            normalizedArticleUrl.startsWith(normalizedSource) &&
-            normalizedArticleUrl !== normalizedSource
+        // CRITICAL: First check if article URL equals ANY source URL (they are listing pages)
+        const isAnySourceUrl = sourceUrlsToCheck.some(
+          (srcUrl) => normalizeUrl(srcUrl) === normalizedArticleUrl,
+        );
+
+        if (isAnySourceUrl) {
+          console.log(
+            `[FILTER] Rejected - matches source URL (listing page): ${article.url}`,
           );
+          return false;
+        }
+
+        // Then check if article URL starts with at least one source URL
+        const startsWithSource = sourceUrlsToCheck.some((srcUrl) => {
+          const normalizedSource = normalizeUrl(srcUrl);
+          return normalizedArticleUrl.startsWith(normalizedSource);
         });
 
-        if (!isValid) {
-          console.log(`[FILTER] Rejected: ${article.url}`);
+        if (!startsWithSource) {
+          console.log(
+            `[FILTER] Rejected - not under any source path: ${article.url}`,
+          );
           console.log(
             `  Must start with one of: ${sourceUrlsToCheck.join(", ")}`,
           );
+          return false;
         }
 
-        return isValid;
+        return true;
       });
 
       console.log(
