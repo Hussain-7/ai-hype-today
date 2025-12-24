@@ -1,12 +1,16 @@
 "use client";
 
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { Menu, Settings, X, Zap } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useUser();
+
+  const metadata = user?.publicMetadata as { isAdmin?: boolean } | undefined;
+  const isAdmin = metadata?.isAdmin === true;
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0A0A0A]/80 backdrop-blur-lg">
@@ -47,13 +51,15 @@ export function Navbar() {
                   },
                 }}
               >
-                <UserButton.MenuItems>
-                  <UserButton.Link
-                    label="Admin Dashboard"
-                    labelIcon={<Settings className="h-4 w-4" />}
-                    href="/admin"
-                  />
-                </UserButton.MenuItems>
+                {isAdmin && (
+                  <UserButton.MenuItems>
+                    <UserButton.Link
+                      label="Admin Dashboard"
+                      labelIcon={<Settings className="h-4 w-4" />}
+                      href="/admin"
+                    />
+                  </UserButton.MenuItems>
+                )}
               </UserButton>
             </SignedIn>
           </div>
@@ -96,13 +102,15 @@ export function Navbar() {
                     },
                   }}
                 >
-                  <UserButton.MenuItems>
-                    <UserButton.Link
-                      label="Admin Dashboard"
-                      labelIcon={<Settings className="h-4 w-4" />}
-                      href="/admin"
-                    />
-                  </UserButton.MenuItems>
+                  {isAdmin && (
+                    <UserButton.MenuItems>
+                      <UserButton.Link
+                        label="Admin Dashboard"
+                        labelIcon={<Settings className="h-4 w-4" />}
+                        href="/admin"
+                      />
+                    </UserButton.MenuItems>
+                  )}
                 </UserButton>
                 <span className="text-sm text-gray-400">Account</span>
               </div>
