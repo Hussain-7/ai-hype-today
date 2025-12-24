@@ -153,7 +153,13 @@ export function useArticles() {
       (a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
     );
-  }, [allArticles, searchQuery, selectedCompanies, selectedCategories, dateRange]);
+  }, [
+    allArticles,
+    searchQuery,
+    selectedCompanies,
+    selectedCategories,
+    dateRange,
+  ]);
 
   return {
     articles: filteredArticles,

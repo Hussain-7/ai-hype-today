@@ -168,11 +168,39 @@ export class PipelineService {
       try {
         console.log(`  - Processing source: ${source.label} (${source.url})`);
 
+        // Check if articles already exist for this company/source
+        const existingArticles = await prisma.article.findMany({
+          where: {
+            companyId: company.id,
+            sourceUrl: source.url,
+          },
+          select: {
+            url: true,
+            title: true,
+            publishedAt: true,
+          },
+          orderBy: {
+            publishedAt: "desc",
+          },
+        });
+
+        // Determine date range based on whether we've fetched before
+        const isFirstFetch = existingArticles.length === 0;
+        const dateRangeDays = isFirstFetch ? this.config.dateRangeDays : 2;
+        const fetchContext = isFirstFetch
+          ? "first fetch - getting all recent articles"
+          : "subsequent fetch - only getting articles from yesterday and today";
+
+        console.log(
+          `    Fetch context: ${fetchContext} (${existingArticles.length} existing articles, ${dateRangeDays} days range)`,
+        );
+
         // Search with Tavily
         const searchResults = await this.tavilyService.searchSourceContent(
           source.url,
           company.name,
-          this.config.dateRangeDays,
+          dateRangeDays,
+          fetchContext,
         );
 
         console.log(`    Found ${searchResults.length} search results`);
@@ -181,7 +209,7 @@ export class PipelineService {
           continue;
         }
 
-        // Extract articles with AI
+        // Extract articles with AI, passing existing articles as context
         const articles = await this.extractionAgent.extractArticlesWithRetry(
           searchResults,
           {
@@ -191,7 +219,9 @@ export class PipelineService {
           },
           source.url,
           source.label,
-          this.config.dateRangeDays,
+          dateRangeDays,
+          existingArticles,
+          isFirstFetch,
         );
 
         console.log(`    Extracted ${articles.length} articles`);

@@ -28,6 +28,33 @@ export function LandingPage() {
     );
   }, [allArticles]);
 
+  // Calculate today's articles count
+  const todaysArticlesCount = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return allArticles.filter((article) => {
+      const articleDate = new Date(article.publishedAt);
+      articleDate.setHours(0, 0, 0, 0);
+      return articleDate.getTime() === today.getTime();
+    }).length;
+  }, [allArticles]);
+
+  // Calculate this month's articles count
+  const thisMonthArticlesCount = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    return allArticles.filter((article) => {
+      const articleDate = new Date(article.publishedAt);
+      return (
+        articleDate.getMonth() === currentMonth &&
+        articleDate.getFullYear() === currentYear
+      );
+    }).length;
+  }, [allArticles]);
+
   const features = [
     {
       icon: Bell,
@@ -109,7 +136,19 @@ export function LandingPage() {
           </Link>
 
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-3 max-w-3xl mx-auto">
+          <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto">
+            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-6 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-emerald-400">
+                {todaysArticlesCount}
+              </div>
+              <div className="mt-2 text-sm text-gray-400">Today's Articles</div>
+            </div>
+            <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-6 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-blue-400">
+                {thisMonthArticlesCount}
+              </div>
+              <div className="mt-2 text-sm text-gray-400">This Month</div>
+            </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
               <div className="text-4xl font-bold text-white">
                 {allArticles.length}
@@ -121,10 +160,6 @@ export function LandingPage() {
                 {new Set(allArticles.map((a) => a.company.slug)).size}
               </div>
               <div className="mt-2 text-sm text-gray-400">AI Companies</div>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-              <div className="text-4xl font-bold text-white">24/7</div>
-              <div className="mt-2 text-sm text-gray-400">Auto-Updated</div>
             </div>
           </div>
         </div>

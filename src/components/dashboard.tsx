@@ -1,12 +1,19 @@
 "use client";
 
 import { format } from "date-fns";
+import { useState } from "react";
 import {
   type JobStatus,
   usePipelineDashboard,
 } from "@/hooks/usePipelineDashboard";
+import { ArticlesManagement } from "./admin/articles-management";
+import { CompaniesManagement } from "./admin/companies-management";
+
+type Tab = "pipeline" | "articles" | "companies";
 
 export function Dashboard() {
+  const [activeTab, setActiveTab] = useState<Tab>("pipeline");
+
   const {
     recentJobs,
     currentJobDisplay,
@@ -32,19 +39,59 @@ export function Dashboard() {
     }
   };
 
+  const tabs: Array<{ id: Tab; label: string }> = [
+    { id: "pipeline", label: "Pipeline" },
+    { id: "articles", label: "Articles" },
+    { id: "companies", label: "Companies" },
+  ];
+
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         {/* Header */}
         <div className="mb-8 sm:mb-12">
           <h1 className="mb-2 text-2xl font-bold text-white sm:mb-3 sm:text-4xl">
-            Pipeline Dashboard
+            Admin Dashboard
           </h1>
           <p className="text-sm text-gray-400 sm:text-lg">
-            Manage and monitor your AI news aggregation pipeline
+            Manage your AI news aggregation platform
           </p>
         </div>
 
+        {/* Tab Navigation */}
+        <div className="mb-8 border-b border-white/10">
+          <div className="flex gap-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`relative px-6 py-3 text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? "text-white"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                {tab.label}
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === "articles" && <ArticlesManagement />}
+        {activeTab === "companies" && <CompaniesManagement />}
+        {activeTab === "pipeline" && <PipelineTab />}
+      </div>
+    </div>
+  );
+
+  function PipelineTab() {
+    return (
+      <div>
         {/* Pipeline Controls */}
         <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm sm:p-6 lg:p-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -136,19 +183,25 @@ export function Dashboard() {
                 </p>
               </div>
               <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 sm:p-6">
-                <p className="text-xs text-emerald-400 sm:text-sm">Successful</p>
+                <p className="text-xs text-emerald-400 sm:text-sm">
+                  Successful
+                </p>
                 <p className="mt-1 text-xl font-bold text-emerald-300 sm:mt-2 sm:text-3xl">
                   {currentJobDisplay.successfulCompanies}
                 </p>
               </div>
               <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-4 sm:p-6">
-                <p className="text-xs text-blue-400 sm:text-sm">Articles Found</p>
+                <p className="text-xs text-blue-400 sm:text-sm">
+                  Articles Found
+                </p>
                 <p className="mt-1 text-xl font-bold text-blue-300 sm:mt-2 sm:text-3xl">
                   {currentJobDisplay.totalArticlesFound}
                 </p>
               </div>
               <div className="rounded-xl border border-purple-500/20 bg-purple-500/10 p-4 sm:p-6">
-                <p className="text-xs text-purple-400 sm:text-sm">Articles Saved</p>
+                <p className="text-xs text-purple-400 sm:text-sm">
+                  Articles Saved
+                </p>
                 <p className="mt-1 text-xl font-bold text-purple-300 sm:mt-2 sm:text-3xl">
                   {currentJobDisplay.totalArticlesSaved}
                 </p>
@@ -167,17 +220,29 @@ export function Dashboard() {
               <table className="min-w-full">
                 <thead className="border-b border-white/10">
                   <tr className="text-left text-xs text-gray-400 sm:text-sm">
-                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Status</th>
-                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Progress</th>
-                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Articles</th>
-                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">Started</th>
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">
+                      Status
+                    </th>
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">
+                      Progress
+                    </th>
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">
+                      Articles
+                    </th>
+                    <th className="whitespace-nowrap px-4 pb-3 font-medium sm:px-0 sm:pb-4">
+                      Started
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {recentJobs.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="px-4 py-8 text-center text-sm text-gray-400 sm:py-12">
-                        No pipeline jobs yet. Trigger the pipeline to get started.
+                      <td
+                        colSpan={4}
+                        className="px-4 py-8 text-center text-sm text-gray-400 sm:py-12"
+                      >
+                        No pipeline jobs yet. Trigger the pipeline to get
+                        started.
                       </td>
                     </tr>
                   ) : (
@@ -210,6 +275,6 @@ export function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

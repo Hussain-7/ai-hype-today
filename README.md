@@ -37,8 +37,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 ## Next Up
-
-- [ ] Enable pipeline to be triggered everyday automatically and fetch all the latest artciles from the sources. Some how dedup or add context of already fetched articles so they are ignored. The first time for a source all articles should be fetched the next time it runs on cron it should fetch articles for the previous day and current day only
+- [ ] When the pipeline is triggered  it fetch all the latest artciles from the sources. The first time for a source all articles should be fetched the next time it runs it should fetch articles for the previous day and current day only (some prompt edits to tell this specifically)
 - [ ] Add inggest keys to be able to deploy.
 - [ ] Add remote postgress db so that we can use it on prod.
 - [ ] From admin panle we should be able to trigger pipeline for a soruce to fetch all from source or fetch for specific ranges and add.

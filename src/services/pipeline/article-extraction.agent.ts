@@ -27,6 +27,12 @@ export class ArticleExtractionAgent {
     sourceUrl: string,
     sourceLabel: string,
     dateRangeDays = 30,
+    existingArticles: Array<{
+      url: string;
+      title: string;
+      publishedAt: Date;
+    }> = [],
+    isFirstFetch = true,
   ): Promise<Article[]> {
     const cutoffDate = subDays(new Date(), dateRangeDays);
 
@@ -39,6 +45,29 @@ export class ArticleExtractionAgent {
       return [];
     }
 
+    // Build context about existing articles
+    const existingArticlesContext =
+      existingArticles.length > 0
+        ? `
+EXISTING ARTICLES IN DATABASE (${existingArticles.length} total):
+We have already fetched articles from this source. Here are the existing articles to help you avoid duplicates:
+${JSON.stringify(
+  existingArticles.slice(0, 20).map((a) => ({
+    url: a.url,
+    title: a.title,
+    publishedAt: a.publishedAt.toISOString(),
+  })),
+  null,
+  2,
+)}
+${existingArticles.length > 20 ? `... and ${existingArticles.length - 20} more existing articles` : ""}
+
+IMPORTANT: Only extract NEW articles that are NOT already in the database above. Focus on articles from yesterday and today.
+`
+        : `
+FIRST FETCH: This is the first time we're fetching from this source. Extract all relevant recent articles within the date range.
+`;
+
     const prompt = `
 You are an AI article extractor for an AI news aggregation platform. Your job is to identify ONLY genuine, individual article pages from search results.
 
@@ -46,6 +75,9 @@ Company: ${company.name}
 Source: ${sourceLabel} (${sourceUrl})
 Whitelisted Domains: ${company.domainFilter.include.join(", ")}
 Date Cutoff: Articles must be published after ${cutoffDate.toISOString()}
+${isFirstFetch ? "Fetch Type: FIRST FETCH - Get all recent articles" : "Fetch Type: SUBSEQUENT FETCH - Only get articles from yesterday and today"}
+
+${existingArticlesContext}
 
 Search Results:
 ${JSON.stringify(filteredResults, null, 2)}
@@ -75,10 +107,14 @@ CRITICAL FILTERING RULES - Extract articles that meet ALL of these criteria:
 
 4. Date Requirements:
    - Published within the last ${dateRangeDays} days (after ${cutoffDate.toISOString()})
+   ${!isFirstFetch ? "   - For SUBSEQUENT FETCH: ONLY articles from yesterday or today" : ""}
    - Use published_date from search results if available
    - If no date provided, estimate from content or use recent date within range
 
-5. Content Requirements:
+5. Duplicate Avoidance${existingArticles.length > 0 ? " (CRITICAL)" : ""}:
+   ${existingArticles.length > 0 ? "   - DO NOT extract articles that already exist in the database (see URLs above)\n   - Check both URL and title to avoid duplicates\n   - Skip any article that appears to be the same as an existing one" : "   - This is the first fetch, so no duplicates exist yet"}
+
+6. Content Requirements:
    - Must have a meaningful, specific title (not generic like "Blog" or "News")
    - Must have substantive content (not just navigation menus)
    - Should represent a single, discrete piece of content
@@ -171,6 +207,12 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
     sourceUrl: string,
     sourceLabel: string,
     dateRangeDays = 30,
+    existingArticles: Array<{
+      url: string;
+      title: string;
+      publishedAt: Date;
+    }> = [],
+    isFirstFetch = true,
     maxRetries = 2,
   ): Promise<Article[]> {
     let lastError: Error | null = null;
@@ -183,6 +225,8 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
           sourceUrl,
           sourceLabel,
           dateRangeDays,
+          existingArticles,
+          isFirstFetch,
         );
       } catch (error) {
         lastError = error as Error;
