@@ -24,8 +24,22 @@ export class ArticlePersistenceService {
       errors: 0,
     };
 
+    // Date cutoff: 1 year ago
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
     for (const article of articles) {
       try {
+        // Skip articles older than 1 year
+        const articleDate = new Date(article.publishedAt);
+        if (articleDate < oneYearAgo) {
+          console.log(
+            `Skipping article older than 1 year: ${article.url} (${articleDate.toISOString()})`,
+          );
+          stats.duplicates++; // Count as duplicate/skipped
+          continue;
+        }
+
         const existing = await prisma.article.findUnique({
           where: { url: article.url },
         });
