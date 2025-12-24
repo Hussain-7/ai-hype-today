@@ -34,3 +34,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Next Up
+
+- [ ] Enable pipeline to be triggered everyday automatically and fetch all the latest artciles from the sources. Some how dedup or add context of already fetched articles so they are ignored. The first time for a source all articles should be fetched the next time it runs on cron it should fetch articles for the previous day and current day only
+- [ ] Add inggest keys to be able to deploy.
+- [ ] Add remote postgress db so that we can use it on prod.
+- [ ] From admin panle we should be able to trigger pipeline for a soruce to fetch all from source or fetch for specific ranges and add.
+- [ ] Add login sign up via clerk. So that admin routes are protected.
+- [ ] Give users abilty to add new sources so they can track new companies and articles.
+- [ ] Persist the user's selected companies and sources so they are persisted in the database.
+- [ ] Add a way to subscribe to the daily updates via email to the users.
+- [ ] Add a way in the intial signup to white list the companies they want to track from the sources we have. So people only see what they need
+- [ ] The sources people add will be added to there if ai approaved and is official and very good we can add to global in the db else for user specific only. 
+- [ ] Status update view
+- [ ] Add an agent when we interact to an article via the agent the agent will fetch all the details related to article and give a summary of the article. We'll cache summaries in the redis or the database.
+- [ ] Expand this in a way so that it can be used for not just ai other product and companies as well so the ai preference can all be selected from the ui layor rather that the db.
+- [ ] Add proper pagination and searching from articles because once total reaches 1000 we need to add pagination and searching.
+- [ ] Improve on url fetching for article ensure we are able to fetch properly
