@@ -11,20 +11,24 @@
     },
     "sources": [
       {
-        "label": "News",
+        "label": "Open AI News",
         "url": "https://openai.com/news/"
       },
       {
-        "label": "Product releases",
+        "label": "Open AI Product releases",
         "url": "https://openai.com/news/product-releases/"
       },
       {
-        "label": "Engineering",
+        "label": "Open AI Engineering",
         "url": "https://openai.com/news/engineering/"
       },
       {
-        "label": "Research",
+        "label": "Open AI Research",
         "url": "https://openai.com/research/"
+      },
+      {
+        "label": "Open AI Blog Index",
+        "url": "https://openai.com/index"
       }
     ]
   },
@@ -40,15 +44,15 @@
     },
     "sources": [
       {
-        "label": "News",
+        "label": "Anthropic News",
         "url": "https://www.anthropic.com/news"
       },
       {
-        "label": "Research",
+        "label": "Anthropic Research",
         "url": "https://www.anthropic.com/research"
       },
       {
-        "label": "Engineering",
+        "label": "Anthropic Engineering",
         "url": "https://www.anthropic.com/engineering"
       }
     ]
@@ -56,7 +60,12 @@
   {
     "company": "Google",
     "slug": "google-ai",
-    "category": ["frontier_model_provider", "cloud_platform", "ai_code_editor", "agent_framework"],
+    "category": [
+      "frontier_model_provider",
+      "cloud_platform",
+      "ai_code_editor",
+      "agent_framework"
+    ],
     "dominance_bucket": "dominant",
     "domain_key": "google.com",
     "domain_filter": {

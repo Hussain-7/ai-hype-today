@@ -34,17 +34,20 @@ export class TavilySearchService {
 
       // Build query with date context for subsequent fetches
       let query = `site:${domain} ${companyName} articles blog posts news`;
-      if (fetchContext?.includes("subsequent fetch")) {
+      const isSubsequentFetch = fetchContext?.includes("subsequent fetch");
+      if (isSubsequentFetch) {
         // Add explicit date context for recent articles
         const today = new Date();
         const yesterday = subDays(today, 1);
-        query += ` (published:${yesterday.toISOString().split("T")[0]} OR published:${today.toISOString().split("T")[0]})`;
+        query += ` (published:${
+          yesterday.toISOString().split("T")[0]
+        } OR published:${today.toISOString().split("T")[0]})`;
       }
 
       const results = await this.client.search({
         query,
         search_depth: "advanced",
-        max_results: 20,
+        max_results: isSubsequentFetch ? 10 : 50,
         include_answer: false,
         include_images: false,
       });

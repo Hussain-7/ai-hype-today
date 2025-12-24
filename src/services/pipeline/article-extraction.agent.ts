@@ -4,7 +4,6 @@ import { subDays } from "date-fns";
 import { type Article, ArticleListSchema } from "@/schemas/article.schema";
 import type { TavilyResult } from "@/types/pipeline.types";
 import type { DomainFilter } from "@/types/sources.types";
-import { isUrlAllowed, isUrlUnderSource } from "./domain-filter.service";
 
 export class ArticleExtractionAgent {
   private model: ReturnType<typeof google>;
@@ -37,12 +36,7 @@ export class ArticleExtractionAgent {
   ): Promise<Article[]> {
     const cutoffDate = subDays(new Date(), dateRangeDays);
 
-    // Pre-filter by domain
-    const filteredResults = searchResults.filter((result) =>
-      isUrlAllowed(result.url, company.domainFilter),
-    );
-
-    if (filteredResults.length === 0) {
+    if (searchResults.length === 0) {
       return [];
     }
 
@@ -70,66 +64,47 @@ FIRST FETCH: This is the first time we're fetching from this source. Extract all
 `;
 
     const prompt = `
-You are an AI article extractor for an AI news aggregation platform. Your job is to identify ONLY genuine, individual article pages from search results.
+You are an AI article extractor for an AI news aggregation platform.
 
 Company: ${company.name}
 Source: ${sourceLabel} (${sourceUrl})
-Whitelisted Domains: ${company.domainFilter.include.join(", ")}
 
-ALLOWED SOURCE URL PATHS (CRITICAL - Articles MUST be from these exact paths):
-${sourceUrls.length > 0 ? sourceUrls.map((url) => `  - ${url}* (and any nested paths)`).join("\n") : `  - ${sourceUrl}* (and any nested paths)`}
+ALLOWED SOURCE URL PATHS (Articles MUST start with these URLs):
+${sourceUrls.length > 0 ? sourceUrls.map((url) => `  - ${url}*`).join("\n") : `  - ${sourceUrl}*`}
 
-⚠️ IMPORTANT: Only extract articles whose URLs start with one of the paths above.
-Example: If source is "https://openai.com/news/", ONLY extract articles like:
-  ✅ https://openai.com/news/gpt4-launch
-  ✅ https://openai.com/news/product-releases/some-feature
-  ❌ https://openai.com/research/paper (WRONG PATH - reject!)
-  ❌ https://openai.com/careers/job (WRONG PATH - reject!)
+🚫 NEVER extract the source URLs themselves (they are listing pages):
+${sourceUrls.length > 0 ? sourceUrls.map((url) => `  ❌ ${url}`).join("\n") : `  ❌ ${sourceUrl}`}
+
+Example:
+  Source: https://openai.com/news/product-releases/
+  ✅ https://openai.com/news/product-releases/gpt4-launch (valid article)
+  ❌ https://openai.com/news/product-releases/ (listing page - reject!)
 
 Date Cutoff: Articles must be published after ${cutoffDate.toISOString()}
-${isFirstFetch ? "Fetch Type: FIRST FETCH - Get all recent articles" : "Fetch Type: SUBSEQUENT FETCH - Only get articles from yesterday and today"}
+${isFirstFetch ? "Fetch Type: FIRST FETCH - Get all recent articles" : "Fetch Type: SUBSEQUENT FETCH - Only articles from yesterday/today"}
 
 ${existingArticlesContext}
 
 Search Results:
-${JSON.stringify(filteredResults, null, 2)}
+${JSON.stringify(searchResults, null, 2)}
 
-CRITICAL FILTERING RULES - Extract articles that meet ALL of these criteria:
+EXTRACTION RULES:
 
-1. ✅ VALID ARTICLE URLs (INCLUDE):
-   - Individual blog posts with specific slugs: /blog/article-title-here
-   - News articles with dates/slugs: /news/2024/01/article-name
-   - Changelog entries with versions: /changelog/v2-release
-   - Documentation updates with specific topics: /docs/updates/new-feature
-   - Research papers or announcements: /research/paper-name
+1. URL Validation:
+   - Article URL MUST start with one of the allowed source URL paths above
+   - Article URL MUST NOT be exactly equal to any source URL (those are listing pages)
 
-2. ❌ INVALID URLs (EXCLUDE - DO NOT EXTRACT):
-   - Bare listing pages: /blog, /blog/, /news, /news/
-   - Forum threads: forum.example.com/*, /forum/*, /t/*, /topic/*
-   - Community discussions: community.example.com/*, /community/*, /discuss/*
-   - Category/tag pages: /category/*, /tag/*, /tags/*
-   - Pagination pages: /page/2, /blog/page/3
-   - Generic landing pages: /, /about, /contact, /home
-   - Documentation root pages: /docs, /docs/ (without specific article)
-
-3. Domain Requirements:
-   - MUST be from whitelisted domains: ${company.domainFilter.include.join(", ")}
-   - MUST NOT be from forum or community subdomains (forum.*, community.*, discuss.*)
-   - MUST be from official company sources, NOT third-party sites
-
-4. Date Requirements:
+2. Date Requirements:
    - Published within the last ${dateRangeDays} days (after ${cutoffDate.toISOString()})
    ${!isFirstFetch ? "   - For SUBSEQUENT FETCH: ONLY articles from yesterday or today" : ""}
-   - Use published_date from search results if available
-   - If no date provided, estimate from content or use recent date within range
 
-5. Duplicate Avoidance${existingArticles.length > 0 ? " (CRITICAL)" : ""}:
-   ${existingArticles.length > 0 ? "   - DO NOT extract articles that already exist in the database (see URLs above)\n   - Check both URL and title to avoid duplicates\n   - Skip any article that appears to be the same as an existing one" : "   - This is the first fetch, so no duplicates exist yet"}
+3. Duplicate Avoidance${existingArticles.length > 0 ? " (CRITICAL)" : ""}:
+   ${existingArticles.length > 0 ? "   - DO NOT extract articles that already exist in the database (see URLs above)" : "   - This is the first fetch, no duplicates exist yet"}
 
-6. Content Requirements:
-   - Must have a meaningful, specific title (not generic like "Blog" or "News")
-   - Must have substantive content (not just navigation menus)
-   - Should represent a single, discrete piece of content
+4. Content Requirements:
+   - Must have a meaningful, specific title
+   - Must have substantive content
+   - Should represent a single article
 
 For each VALID article, extract:
 - url: The direct article URL (must pass all filtering rules above)
@@ -155,69 +130,45 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
         temperature: 0.3, // Lower temperature for more consistent extraction
       });
 
-      // Post-process: Apply additional URL validation
-      const validArticles = output.articles.filter((article) => {
-        // Double-check each URL passes domain filter (redundant but safe)
-        if (!isUrlAllowed(article.url, company.domainFilter)) {
-          console.log(`Filtered out invalid URL: ${article.url}`);
-          return false;
-        }
-
-        // Validate URL format
-        try {
-          const urlObj = new URL(article.url);
-
-          // Reject if it's a bare listing page that somehow got through
-          const pathname = urlObj.pathname.toLowerCase();
-          if (
-            pathname === "/blog" ||
-            pathname === "/blog/" ||
-            pathname === "/news" ||
-            pathname === "/news/" ||
-            pathname === "/updates" ||
-            pathname === "/updates/"
-          ) {
-            console.log(`Filtered out listing page: ${article.url}`);
-            return false;
-          }
-
-          // URL should have meaningful path segments
-          const segments = pathname.split("/").filter((s) => s.length > 0);
-          if (segments.length === 0) {
-            console.log(`Filtered out root URL: ${article.url}`);
-            return false;
-          }
-
-          return true;
-        } catch (_error) {
-          console.log(`Filtered out malformed URL: ${article.url}`);
-          return false;
-        }
-      });
-
-      console.log(
-        `Extracted ${validArticles.length} valid articles out of ${output.articles.length} total`,
-      );
-
-      // CRITICAL: Deterministic filter to ensure articles are under source URL paths
+      // SIMPLIFIED FILTERING: Only validate against source URLs
+      // Source URLs contain the article URL as a prefix for valid articles
       const sourceUrlsToCheck =
         sourceUrls.length > 0 ? sourceUrls : [sourceUrl];
-      const strictlyFilteredArticles = validArticles.filter((article) => {
-        const isUnderSource = isUrlUnderSource(article.url, sourceUrlsToCheck);
-        if (!isUnderSource) {
-          console.log(
-            `[STRICT FILTER] Rejected article not under source URL paths: ${article.url}`,
+
+      const strictlyFilteredArticles = output.articles.filter((article) => {
+        // Normalize URLs for comparison (remove trailing slashes and query params)
+        const normalizeUrl = (url: string) => {
+          try {
+            const urlObj = new URL(url);
+            return `${urlObj.origin}${urlObj.pathname}`.replace(/\/$/, "");
+          } catch {
+            return url;
+          }
+        };
+
+        const normalizedArticleUrl = normalizeUrl(article.url);
+
+        // Check if article URL starts with any source URL (but is not exactly the source URL)
+        const isValid = sourceUrlsToCheck.some((srcUrl) => {
+          const normalizedSource = normalizeUrl(srcUrl);
+          return (
+            normalizedArticleUrl.startsWith(normalizedSource) &&
+            normalizedArticleUrl !== normalizedSource
           );
+        });
+
+        if (!isValid) {
+          console.log(`[FILTER] Rejected: ${article.url}`);
           console.log(
-            `  Allowed source paths: ${sourceUrlsToCheck.join(", ")}`,
+            `  Must start with one of: ${sourceUrlsToCheck.join(", ")}`,
           );
-          return false;
         }
-        return true;
+
+        return isValid;
       });
 
       console.log(
-        `Strict source URL filtering: ${validArticles.length} → ${strictlyFilteredArticles.length} articles`,
+        `Filtered ${output.articles.length} → ${strictlyFilteredArticles.length} articles`,
       );
 
       return strictlyFilteredArticles;

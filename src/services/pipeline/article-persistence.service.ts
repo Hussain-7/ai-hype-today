@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { extractDomain } from "@/lib/url.utils";
 import type { Article } from "@/schemas/article.schema";
-import { extractDomain } from "./domain-filter.service";
 
 interface PersistenceStats {
   saved: number;
