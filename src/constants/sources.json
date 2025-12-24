@@ -11,28 +11,8 @@
     },
     "sources": [
       {
-        "label": "Open AI News",
-        "url": "https://openai.com/news/"
-      },
-      {
-        "label": "Open AI Product releases",
-        "url": "https://openai.com/news/product-releases/"
-      },
-      {
-        "label": "Open AI Engineering",
-        "url": "https://openai.com/news/engineering/"
-      },
-      {
-        "label": "Open AI Research",
-        "url": "https://openai.com/research/"
-      },
-      {
-        "label": "Open AI Research",
-        "url": "https://openai.com/news/research/"
-      },
-      {
         "label": "Open AI Blog Index",
-        "url": "https://openai.com/index"
+        "url": "https://openai.com/index/"
       }
     ]
   },

@@ -64,9 +64,7 @@ FIRST FETCH: This is the first time we're fetching from this source. Extract all
 `;
 
     const prompt = `
-You are an AI article extractor for an AI news aggregation platform with web search capability.
-
-You can use Google Search to verify if URLs are real articles and not any listing pages before extracting them.
+You are an AI article extractor for an AI news aggregation platform.
 
 Company: ${company.name}
 Source: ${sourceLabel} (${sourceUrl})
@@ -92,15 +90,10 @@ ${JSON.stringify(searchResults, null, 2)}
 
 EXTRACTION RULES:
 
-1. URL Validation (USE WEB SEARCH TO VERIFY):
+1. URL Validation:
    - Article URL MUST start with one of the allowed source URL paths above
    - Article URL MUST NOT be exactly equal to any source URL (those are listing pages)
-   - If URL looks ambiguous (e.g., /news/research/, /blog/ai/), use Google Search to verify it's a REAL ARTICLE:
-     * Search for the URL to confirm it's an individual article page
-     * If search shows it's a category/listing page → REJECT IT
-     * If search confirms it's a genuine article → ACCEPT IT
-     * When in doubt, search and verify before extracting
-   - ONLY extract URLs that are confirmed individual articles
+   - ONLY extract URLs that are individual articles with specific content
    - NEVER extract listing pages, category pages, or index pages
 
 2. Date Requirements:
@@ -133,13 +126,10 @@ Return ONLY articles that meet ALL criteria above. Quality over quantity.
       const { output } = await generateText({
         model: this.model,
         prompt,
-        tools: {
-          google_search: google.tools.googleSearch({}),
-        },
         output: Output.object({
           schema: ArticleListSchema,
         }),
-        temperature: 0.5, // Balanced temperature for comprehensive extraction while maintaining quality
+        temperature: 0.5,
       });
 
       // SIMPLIFIED FILTERING: Only validate against source URLs
