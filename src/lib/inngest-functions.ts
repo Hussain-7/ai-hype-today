@@ -82,4 +82,8 @@ export const dailyPipelineTrigger = inngest.createFunction(
 );
 
 // Export all functions
-export const inngestFunctions = [processPipeline, dailyPipelineTrigger];
+// Note: dailyPipelineTrigger is disabled - uncomment to enable cron schedule
+export const inngestFunctions = [
+  processPipeline,
+  // dailyPipelineTrigger, // Disabled - uncomment to enable daily 12AM & 12PM triggers
+];
