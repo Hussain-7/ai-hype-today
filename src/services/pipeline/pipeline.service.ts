@@ -92,8 +92,18 @@ export class PipelineService {
         currentJob.processedCompanies >= currentJob.totalCompanies
       ) {
         console.log(
-          `Safety check: Already processed ${currentJob.processedCompanies}/${currentJob.totalCompanies} companies, stopping`,
+          `Safety check: Already processed ${currentJob.processedCompanies}/${currentJob.totalCompanies} companies, marking as complete`,
         );
+
+        // Mark job as completed before exiting
+        await prisma.pipelineJob.update({
+          where: { id: jobId },
+          data: {
+            status: "COMPLETED",
+            completedAt: new Date(),
+          },
+        });
+
         return;
       }
 
