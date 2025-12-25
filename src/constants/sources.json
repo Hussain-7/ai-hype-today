@@ -320,19 +320,19 @@
     ]
   },
   {
-    "company": "Bolt.new (StackBlitz)",
+    "company": "Bolt",
     "slug": "bolt-new",
     "category": ["ai_dev_agent", "in_browser_dev"],
     "dominance_bucket": "tooling",
     "domain_key": "bolt.new",
     "domain_filter": {
-      "include": ["bolt.new", "support.bolt.new", "blog.stackblitz.com"],
+      "include": ["bolt.new"],
       "exclude": []
     },
     "sources": [
       {
-        "label": "StackBlitz blog",
-        "url": "https://blog.stackblitz.com/"
+        "label": "Bolt Blog",
+        "url": "https://bolt.new/blog"
       }
     ]
   },
@@ -360,13 +360,13 @@
     "dominance_bucket": "dominant",
     "domain_key": "microsoft.com",
     "domain_filter": {
-      "include": ["azure.microsoft.com", "learn.microsoft.com"],
+      "include": ["azure.microsoft.com"],
       "exclude": []
     },
     "sources": [
       {
-        "label": "Azure updates",
-        "url": "https://azure.microsoft.com/en-us/updates/"
+        "label": "Microsoft Blog",
+        "url": "https://azure.microsoft.com/en-us/blog/"
       }
     ]
   },
@@ -377,17 +377,13 @@
     "dominance_bucket": "dominant",
     "domain_key": "aws.amazon.com",
     "domain_filter": {
-      "include": [
-        "aws.amazon.com",
-        "aws.amazon.com/blogs",
-        "docs.aws.amazon.com"
-      ],
+      "include": ["aws.amazon.com"],
       "exclude": []
     },
     "sources": [
       {
-        "label": "AWS Machine Learning Blog",
-        "url": "https://aws.amazon.com/blogs/machine-learning/"
+        "label": "AWS Blog",
+        "url": "https://aws.amazon.com/blogs/"
       }
     ]
   },
@@ -477,10 +473,6 @@
       {
         "label": "Announcements",
         "url": "https://openrouter.ai/announcements"
-      },
-      {
-        "label": "Announcements archive",
-        "url": "https://openrouter.ai/announcements/all"
       }
     ]
   },
@@ -591,6 +583,10 @@
       {
         "label": "V0 blogs",
         "url": "https://vercel.com/blog/category/v0"
+      }, 
+      {
+        "label": "NextJS blog",
+        "url": "https://nextjs.org/blog"
       }
     ]
   },
