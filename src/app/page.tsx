@@ -1,8 +1,8 @@
 import { LandingPage } from "@/components/landing-page";
 import { getAllArticles } from "@/lib/get-articles";
 
-// Revalidate every 6 hours (21600 seconds)
-export const revalidate = 21600;
+// Revalidate every 1 hour (3600 seconds)
+export const revalidate = 3600;
 
 export default async function Home() {
   // Fetch articles server-side for fast initial render
