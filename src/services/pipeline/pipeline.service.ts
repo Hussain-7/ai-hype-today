@@ -71,7 +71,7 @@ export class PipelineService {
     let duplicatesSkipped = 0;
 
     for (const company of companies) {
-      // Check if job was cancelled
+      // Check if job was cancelled or completed
       const currentJob = await prisma.pipelineJob.findUnique({
         where: { id: jobId },
       });
@@ -81,8 +81,26 @@ export class PipelineService {
         return;
       }
 
+      if (currentJob?.status === "COMPLETED") {
+        console.log("Pipeline job already completed, stopping to prevent reprocessing");
+        return;
+      }
+
+      // Safety check: Don't process if already at or over total
+      if (
+        currentJob &&
+        currentJob.processedCompanies >= currentJob.totalCompanies
+      ) {
+        console.log(
+          `Safety check: Already processed ${currentJob.processedCompanies}/${currentJob.totalCompanies} companies, stopping`,
+        );
+        return;
+      }
+
       try {
-        console.log(`Processing company: ${company.name}`);
+        console.log(
+          `Processing company: ${company.name} (${currentJob?.processedCompanies || 0 + 1}/${currentJob?.totalCompanies})`,
+        );
 
         const companyStats = await this.processCompany(company, jobId);
 

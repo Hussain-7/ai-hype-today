@@ -6,6 +6,7 @@ export const processPipeline = inngest.createFunction(
   {
     id: "process-pipeline",
     name: "Process Article Aggregation Pipeline",
+    retries: 0, // Disable automatic retries to prevent duplicate processing
   },
   { event: "pipeline/trigger" },
   async ({ event, step }) => {

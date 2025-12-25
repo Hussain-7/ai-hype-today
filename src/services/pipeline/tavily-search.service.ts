@@ -1,5 +1,5 @@
+import { tavily } from "@tavily/core";
 import { subDays } from "date-fns";
-import { TavilyClient } from "tavily";
 import type { TavilyResult } from "@/types/pipeline.types";
 
 interface TavilyApiResult {
@@ -12,10 +12,10 @@ interface TavilyApiResult {
 }
 
 export class TavilySearchService {
-  private client: TavilyClient;
+  private client: ReturnType<typeof tavily>;
 
   constructor(apiKey: string) {
-    this.client = new TavilyClient({ apiKey });
+    this.client = tavily({ apiKey });
   }
 
   /**
@@ -31,16 +31,18 @@ export class TavilySearchService {
     const isSubsequentFetch = fetchContext?.includes("subsequent fetch");
 
     try {
-      const domain = new URL(sourceUrl).hostname;
+      const urlObj = new URL(sourceUrl);
+      const domain = urlObj.hostname;
+      const path = urlObj.pathname.replace(/\/$/, ""); // Remove trailing slash
 
-      // Define multiple search query variations for comprehensive coverage
+      // Define multiple search query variations targeting the specific source path
       const queryVariations = [
-        // Pass 1: General content
-        `site:${domain} ${companyName} articles blog posts news`,
-        // Pass 2: Product/release focus
-        `site:${domain} ${companyName} updates announcements releases`,
-        // Pass 3: Technical content
-        `site:${domain} ${companyName} research engineering`,
+        // Pass 1: General content with path targeting
+        `site:${domain} inurl:${path} ${companyName} articles blog posts news`,
+        // Pass 2: Product/release focus with path targeting
+        `site:${domain} inurl:${path} ${companyName} updates announcements releases`,
+        // Pass 3: Technical content with path targeting
+        `site:${domain} inurl:${path} ${companyName} research engineering`,
       ];
 
       const allResults: TavilyResult[] = [];
@@ -59,29 +61,28 @@ export class TavilySearchService {
         }
 
         try {
-          const results = await this.client.search({
-            query,
-            search_depth: "advanced",
-            max_results: 20,
-            include_answer: false,
-            include_images: false,
+          const results = await this.client.search(query, {
+            searchDepth: "advanced",
+            maxResults: 20,
+            includeAnswer: false,
+            includeImages: false,
           });
 
           // Filter by date manually if publishedDate is available
           const filteredResults = (results.results || [])
-            .filter((result: TavilyApiResult) => {
-              if (result.published_date) {
-                const publishedDate = new Date(result.published_date);
+            .filter((result) => {
+              if (result.publishedDate) {
+                const publishedDate = new Date(result.publishedDate);
                 return publishedDate >= cutoffDate;
               }
               return true;
             })
-            .map((result: TavilyApiResult) => ({
+            .map((result) => ({
               url: result.url,
               title: result.title,
               content: result.content,
-              score: Number.parseFloat(result.score) || 0,
-              published_date: result.published_date,
+              score: result.score || 0,
+              published_date: result.publishedDate,
             }));
 
           allResults.push(...filteredResults);
