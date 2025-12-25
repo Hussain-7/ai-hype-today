@@ -2,15 +2,6 @@ import { tavily } from "@tavily/core";
 import { subDays } from "date-fns";
 import type { TavilyResult } from "@/types/pipeline.types";
 
-interface TavilyApiResult {
-  url: string;
-  title: string;
-  content: string;
-  raw_content?: string;
-  score: string;
-  published_date?: string;
-}
-
 export class TavilySearchService {
   private client: ReturnType<typeof tavily>;
 

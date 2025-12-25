@@ -82,7 +82,9 @@ export class PipelineService {
       }
 
       if (currentJob?.status === "COMPLETED") {
-        console.log("Pipeline job already completed, stopping to prevent reprocessing");
+        console.log(
+          "Pipeline job already completed, stopping to prevent reprocessing",
+        );
         return;
       }
 

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -5,7 +6,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ReactNode } from "react";
 
 interface SingleSelectDropdownProps<T extends string> {
   triggerIcon?: ReactNode;

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { extractDomain } from "@/lib/url.utils";
+import { extractDomain } from "@/lib/utils";
 import type { Article } from "@/schemas/article.schema";
 
 interface PersistenceStats {
