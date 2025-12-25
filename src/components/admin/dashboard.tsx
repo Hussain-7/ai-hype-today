@@ -6,9 +6,9 @@ import {
   type JobStatus,
   usePipelineDashboard,
 } from "@/hooks/usePipelineDashboard";
-import { ArticlesManagement } from "./admin/articles-management";
-import { CompaniesManagement } from "./admin/companies-management";
-import { CompanySelectorModal } from "./admin/company-selector-modal";
+import { ArticlesManagement } from "./articles-management";
+import { CompaniesManagement } from "./companies-management";
+import { CompanySelectorModal } from "./company-selector-modal";
 
 type Tab = "pipeline" | "articles" | "companies";
 

@@ -1,4 +1,4 @@
-import { ArticlesPage } from "@/components/articles-page";
+import { ArticlesPage } from "@/components/articles/articles-page";
 import { getAllArticles } from "@/lib/get-articles";
 
 // Revalidate every 1 hour (3600 seconds)

@@ -18,7 +18,7 @@ export function Navbar() {
             <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
               <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
-            <span className="text-sm sm:text-base lg:text-lg font-bold text-white">
+            <span className="text-sm sm:text-base lg:text-lg font-bold text-white font-orbitron tracking-wide">
               AIHypeToday
             </span>
           </Link>
@@ -28,9 +28,10 @@ export function Navbar() {
             <SignedOut>
               <Link
                 href="/sign-in"
-                className="rounded-lg bg-blue-500 px-4 py-2 sm:px-6 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-blue-600"
+                className="group relative overflow-hidden rounded-xl border border-blue-500/20 bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-2 sm:px-6 text-xs sm:text-sm font-semibold text-white transition-all hover:shadow-lg hover:shadow-blue-500/30 hover:border-blue-500/40"
               >
-                Sign In
+                <span className="relative z-10">Sign In</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 transition-opacity group-hover:opacity-100" />
               </Link>
             </SignedOut>
             <SignedIn>

@@ -1,3 +1,5 @@
+import { cache } from "react";
+import "server-only";
 import { prisma } from "@/lib/prisma";
 
 export interface Article {
@@ -22,9 +24,10 @@ export interface Article {
 
 /**
  * Fetch all articles from database (server-side)
+ * Wrapped with React cache() for automatic request deduplication
  * Used by landing page and articles page for SSR
  */
-export async function getAllArticles(): Promise<Article[]> {
+export const getAllArticles = cache(async (): Promise<Article[]> => {
   try {
     const articles = await prisma.article.findMany({
       orderBy: {
@@ -51,4 +54,12 @@ export async function getAllArticles(): Promise<Article[]> {
     console.error("Failed to fetch articles:", error);
     return [];
   }
-}
+});
+
+/**
+ * Preload articles for parallel fetching
+ * Call this before awaiting to start the request early
+ */
+export const preloadArticles = () => {
+  void getAllArticles();
+};

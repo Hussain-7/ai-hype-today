@@ -1,4 +1,4 @@
-import { LandingPage } from "@/components/landing-page";
+import { LandingPage } from "@/components/home/landing-page";
 import { getAllArticles } from "@/lib/get-articles";
 
 // Revalidate every 1 hour (3600 seconds)
