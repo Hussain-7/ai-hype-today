@@ -64,7 +64,7 @@ FIRST FETCH: This is the first time we're fetching from this source. Extract all
 `;
 
     const prompt = `
-You are an AI article extractor for an AI news aggregation platform.
+You are an AI article extractor for "AI Hype Today" - a platform that tracks NEW innovations, releases, and breakthrough developments in AI.
 
 Company: ${company.name}
 Source: ${sourceLabel} (${sourceUrl})
@@ -88,6 +88,40 @@ ${existingArticlesContext}
 Search Results:
 ${JSON.stringify(searchResults, null, 2)}
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 CONTENT FILTERING - ONLY EXTRACT "HYPE-WORTHY" AI INNOVATION ARTICLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ MUST INCLUDE - Articles about:
+1. NEW AI model releases (GPT-5, Claude 4, Gemini Pro, etc.)
+2. NEW product launches (AI tools, features, APIs, platforms)
+3. BREAKTHROUGH research (new capabilities, benchmarks, architectures)
+4. MAJOR partnerships or acquisitions in AI space
+5. NEW AI technologies or techniques announced
+6. SIGNIFICANT funding rounds or company milestones
+7. REGULATORY changes or policy announcements affecting AI
+8. AI safety breakthroughs or important developments
+9. NEW open-source AI model releases
+10. INNOVATIVE use cases or applications of AI
+11. MAJOR performance improvements or new benchmarks
+12. AI infrastructure or platform announcements
+
+🚫 MUST EXCLUDE - Filter out:
+1. ❌ General company updates unrelated to AI innovation
+2. ❌ Blog posts about "how to use" existing features
+3. ❌ Tutorial or educational content (unless about brand new features)
+4. ❌ Case studies or customer stories (unless groundbreaking use case)
+5. ❌ Routine maintenance updates or bug fixes
+6. ❌ Job postings or hiring announcements
+7. ❌ Event recaps or conference summaries (unless major announcements made)
+8. ❌ Opinion pieces without new information
+9. ❌ Republished or recycled content
+10. ❌ Minor feature updates or incremental improvements
+11. ❌ Marketing fluff without substance
+12. ❌ General tech news not specifically about AI innovation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 EXTRACTION RULES:
 
 1. URL Validation:
@@ -103,23 +137,35 @@ EXTRACTION RULES:
 3. Duplicate Avoidance${existingArticles.length > 0 ? " (CRITICAL)" : ""}:
    ${existingArticles.length > 0 ? "   - DO NOT extract articles that already exist in the database (see URLs above)" : "   - This is the first fetch, no duplicates exist yet"}
 
-4. Content Requirements:
-   - Must have a meaningful, specific title
-   - Must have substantive content
-   - Should represent a single article
+4. INNOVATION & HYPE FILTER (CRITICAL):
+   - Article MUST be about something NEW, INNOVATIVE, or SIGNIFICANT
+   - Must announce or discuss new technology, products, research, or developments
+   - Should generate excitement or interest in the AI community
+   - Avoid routine updates, tutorials, or non-newsworthy content
+   - Focus on breakthrough moments, not incremental updates
+
+5. Content Requirements:
+   - Must have a meaningful, specific title that indicates innovation/news
+   - Must have substantive content about new developments
+   - Should represent a single article about a specific announcement or development
+   - Title should clearly indicate what's NEW or INNOVATIVE
 
 For each VALID article, extract:
 - url: The direct article URL (must pass all filtering rules above)
 - title: Article title (clean, without site name or extra metadata)
-- description: Brief article description or excerpt (extract from content if available)
+- description: Brief description highlighting the INNOVATION or NEW development (extract from content if available)
 - publishedAt: ISO 8601 date when published
 - author: Author name if mentioned in content
-- tags: Relevant tags or categories extracted from content
+- tags: Relevant tags emphasizing innovation (e.g., "new-release", "breakthrough", "product-launch", "research", etc.)
 
-IMPORTANT: Be conservative. When in doubt about whether a URL is a listing page or an article page, EXCLUDE it.
-Only return articles where you are confident they are individual, substantive content pieces from official sources.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Return ONLY articles that meet ALL criteria above. Quality over quantity.
+QUALITY OVER QUANTITY: Be highly selective. Only extract articles that represent genuine AI innovation,
+new product releases, breakthrough research, or significant developments that would excite AI enthusiasts.
+
+When in doubt about whether content is "hype-worthy" or innovative enough, EXCLUDE it.
+
+Return ONLY articles that meet ALL criteria above, especially the innovation/hype filter.
 `;
 
     try {
