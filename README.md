@@ -1,6 +1,6 @@
 # AI Hype Today
 
-AI Hype Today is a Next.js platform for tracking new AI products, launches, and major updates across curated sources. It combines a public-facing news experience with an authenticated admin workflow for ingesting, reviewing, and managing articles.
+AI Hype Today is a Next.js platform for tracking new AI products, launches, and major updates across curated sources. It combines a public-facing news experience with an authenticated admin workflow for ingesting, reviewing, and managing articles at scale.
 
 ## Highlights
 
