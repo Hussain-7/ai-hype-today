@@ -1,55 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Hype Today
+
+AI Hype Today is a Next.js platform for tracking new AI products, launches, and major updates across curated sources. It combines a public-facing news experience with an authenticated admin workflow for ingesting, reviewing, and managing articles.
+
+## Highlights
+
+- Aggregates AI news and product updates from multiple sources
+- Uses AI-assisted extraction to normalize titles, summaries, and company data
+- Includes protected admin flows for running and monitoring ingestion jobs
+- Stores articles and source data with Prisma and PostgreSQL
+- Uses Inngest for background workflows and scheduled processing
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- Clerk
+- Prisma
+- PostgreSQL
+- Inngest
+- Tavily
+- TypeScript
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy your example file and fill in the required secrets for the app, database, authentication, and pipeline providers.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cp .env.example .env.local
+```
 
-## Learn More
+### 3. Prepare the database
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm db:migrate
+pnpm db:seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+If you are running the local database helpers included in the repo:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm db:start
+pnpm db:stop
+```
 
-## Deploy on Vercel
+### 4. Start the app
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts
 
+```bash
+pnpm dev
+pnpm build
+pnpm start
+pnpm check
+pnpm db:migrate
+pnpm db:seed
+pnpm db:studio
+```
 
-## Next Up
-- [x] When the pipeline is triggered  it fetch all the latest artciles from the sources. The first time for a source all articles should be fetched the next time it runs it should fetch articles for the previous day and current day only (some prompt edits to tell this specifically)
-- [x] Add inggest keys to be able to deploy.
-- [x] Add remote postgress db so that we can use it on prod.
-- [x] From admin panle we should be able to trigger pipeline for a soruce to fetch all from source or fetch for specific ranges and add.
-- [x] Add login sign up via clerk. So that admin routes are protected.
-- [ ] Fix pipeline in prod not ending on total articles fetched. Fetching starts again and fetches more than total companies.
-- [ ] Give users abilty to add new sources so they can track new companies and articles.
-- [ ] Persist the user's selected companies and sources so they are persisted in the database.
-- [ ] Add a way to subscribe to the daily updates via email to the users.
-- [ ] Add a way in the intial signup to white list the companies they want to track from the sources we have. So people only see what they need
-- [ ] The sources people add will be added to there if ai approaved and is official and very good we can add to global in the db else for user specific only. 
-- [ ] Status update view
-- [ ] Add an agent when we interact to an article via the agent the agent will fetch all the details related to article and give a summary of the article. We'll cache summaries in the redis or the database.
-- [ ] Expand this in a way so that it can be used for not just ai other product and companies as well so the ai preference can all be selected from the ui layor rather that the db.
-- [ ] Add proper pagination and searching from articles because once total reaches 1000 we need to add pagination and searching.
-- [ ] Improve on url fetching for article ensure we are able to fetch properly
+## Documentation
+
+- [Dashboard notes](./DASHBOARD.md)
+- [Database notes](./DATABASE.md)
+
+## Roadmap
+
+- Improve production pipeline completion behavior
+- Let users add and manage their own tracked sources
+- Persist company and source preferences per user
+- Add subscriptions for daily update delivery
+- Expand the platform beyond AI-specific tracking
+
+## License
+
+MIT
